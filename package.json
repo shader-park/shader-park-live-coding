@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Starter template with Shader Park for live coding",
   "main": "index.js",
-  "repository": "https://github.com/shader-park/shader-park-examples",
+  "repository": "https://github.com/shader-park/shader-park-live-coding",
   "author": "Torin Blankensmith & Peter Whidden",
   "license": "MIT",
   "private": false,
