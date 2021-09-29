@@ -5,7 +5,9 @@ import { spCode } from './src/spCode.js';
 import { initUIInteractions } from './src/ui.js';
 import {createEditor} from './src/editor.js';
 
-initUIInteractions();
+let state = {};
+initUIInteractions(state);
+
 let startCode = spCode();
 
 let scene = new Scene();
@@ -34,7 +36,7 @@ if ('code' in qParams) {
   startCode = decodeURI(qParams['code'])
 }
 
-
+state.code = startCode;
 // Shader Park Setup
 let mesh = createSculptureWithGeometry(geometry, startCode, () => ( {
     time: params.time,
@@ -71,7 +73,7 @@ camera.position.z = 2;
 window.controls = controls;
 
 let onCodeChange = (code) => {
-  console.log(code);
+  state.code = code;
   try {
     // let newMesh = createSculpture(code, () => ( {
     //   time: params.time,
