@@ -23,11 +23,11 @@ renderer.setPixelRatio( window.devicePixelRatio );
 renderer.setClearColor( new Color(1, 1, 1), 0 );
 document.body.appendChild( renderer.domElement );
 
-let geometry  = new SphereGeometry(1, 45, 45);
+let geometry  = new SphereGeometry(2, 45, 45);
 const urlSearchParams = new URLSearchParams(window.location.search);
 const qParams = Object.fromEntries(urlSearchParams.entries());
 if ('torus' in qParams) {
-  geometry = new TorusKnotGeometry( 1, .3, 100, 40);
+  geometry = new TorusKnotGeometry( 2, .3, 100, 40);
   geometry.computeBoundingSphere();
   geometry.center();
 }
@@ -35,11 +35,16 @@ if ('torus' in qParams) {
 if ('code' in qParams) {
   startCode = decodeURI(qParams['code'])
 }
+let scale = 1.0;
+if('scale' in qParams) {
+  scale = qParams['scale'];
+}
 
 state.code = startCode;
 // Shader Park Setup
 let mesh = createSculptureWithGeometry(geometry, startCode, () => ( {
     time: params.time,
+    _scale: scale
 } ));
 scene.add(mesh);
 
@@ -86,7 +91,6 @@ let onCodeChange = (code) => {
     console.error(error);
   }
 }
-
 
 /////Editor
 let editor = createEditor(startCode, onCodeChange);
