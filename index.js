@@ -1,9 +1,9 @@
 import { Scene, PerspectiveCamera, WebGLRenderer, Color, TorusKnotGeometry, SphereGeometry } from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { createSculptureWithGeometry, sculptToThreeJSMaterial } from 'shader-park-core';
-import { spCode } from './spCode.js';
+import { spCode } from './src/spCode.js';
 
-import {createEditor} from './editor.js';
+import {createEditor} from './src/editor.js';
 
 let codeContainer = document.querySelector('.code-container');
 
