@@ -36,7 +36,7 @@ if ('code' in qParams) {
 
 
 // Shader Park Setup
-let mesh = createSculptureWithGeometry(geometry, spCode(), () => ( {
+let mesh = createSculptureWithGeometry(geometry, startCode, () => ( {
     time: params.time,
 } ));
 scene.add(mesh);
