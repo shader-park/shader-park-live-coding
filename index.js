@@ -1,11 +1,12 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Color, TorusKnotGeometry, SphereGeometry } from 'three';
+import { Scene, PerspectiveCamera, WebGLRenderer, Color, TorusKnotGeometry, SphereGeometry, FontLoader, TextBufferGeometry } from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { createSculptureWithGeometry, sculptToThreeJSMaterial } from 'shader-park-core';
 import { spCode } from './src/spCode.js';
-
+import { initUIInteractions } from './src/ui.js';
 import {createEditor} from './src/editor.js';
 
-let codeContainer = document.querySelector('.code-container');
+initUIInteractions();
+let startCode = spCode();
 
 let scene = new Scene();
 let params = { time: 0 };
@@ -20,11 +21,19 @@ renderer.setPixelRatio( window.devicePixelRatio );
 renderer.setClearColor( new Color(1, 1, 1), 0 );
 document.body.appendChild( renderer.domElement );
 
+let geometry  = new SphereGeometry(1, 45, 45);
+const urlSearchParams = new URLSearchParams(window.location.search);
+const qParams = Object.fromEntries(urlSearchParams.entries());
+if ('torus' in qParams) {
+  geometry = new TorusKnotGeometry( 1, .3, 100, 40);
+  geometry.computeBoundingSphere();
+  geometry.center();
+}
 
-let geometry = new SphereGeometry(1, 45, 45);
-// let geometry = new TorusKnotGeometry( 1, .3, 100, 40);
-// geometry.computeBoundingSphere();
-// geometry.center();
+if ('code' in qParams) {
+  startCode = decodeURI(qParams['code'])
+}
+
 
 // Shader Park Setup
 let mesh = createSculptureWithGeometry(geometry, spCode(), () => ( {
@@ -32,12 +41,24 @@ let mesh = createSculptureWithGeometry(geometry, spCode(), () => ( {
 } ));
 scene.add(mesh);
 
-// *** Uncomment to try using a custom geometry. Make sure to comment out likes 26-29 ***.
-
-// let mesh = createSculptureWithGeometry(geometry, spCode, () => ( {
-//   time: params.time,
-// } ));
-// scene.add(mesh);
+if( 'text' in qParams) {
+  const loader = new FontLoader();
+  loader.load( 'https://cdn.glitch.com/44b034f5-6c9a-414c-96b3-8280ecf82f27%2Fhelvetiker_regular.typeface.json?v=1615399030749', function ( font ) {
+    mesh.geometry = new TextBufferGeometry( qParams['text'], {
+      font: font,
+      size: 2,
+      height: .1,
+      curveSegments: 12,
+      bevelEnabled: true,
+      bevelThickness: .01,
+      bevelSize: .1,
+      bevelOffset: 0,
+      bevelSegments: 1
+    } );
+    mesh.geometry.computeBoundingSphere();
+    mesh.geometry.center();
+  });
+}
 
 let controls = new OrbitControls( camera, renderer.domElement, {
   enableDamping : true,
@@ -64,8 +85,11 @@ let onCodeChange = (code) => {
   }
 }
 
-let editor = createEditor(onCodeChange);
+
+/////Editor
+let editor = createEditor(startCode, onCodeChange);
 window.editor = editor;
+let codeContainer = document.querySelector('.code-container');
 codeContainer.appendChild(editor.dom);
 
 let onWindowResize = () => {

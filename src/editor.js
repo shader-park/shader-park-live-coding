@@ -2,9 +2,8 @@ import {EditorState, basicSetup} from "@codemirror/basic-setup"
 import {EditorView, keymap} from "@codemirror/view"
 import {indentWithTab} from "@codemirror/commands"
 import {javascript} from "@codemirror/lang-javascript"
-import { spCode } from "./spCode"
 
-export function createEditor(codeChangeCallback) {
+export function createEditor(startCode, codeChangeCallback) {
     let baseTheme = EditorView.theme({
         "&": {
           fontSize: '20pt',
@@ -46,7 +45,7 @@ export function createEditor(codeChangeCallback) {
         }
     });
 
-    const doc = spCode();
+    const doc = startCode;
     return new EditorView({
     state: EditorState.create({
         doc,

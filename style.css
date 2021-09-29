@@ -14,7 +14,7 @@ body {
 .code-container {
   position: fixed;
   left: 0px;
-  top: 0px;
+  top: 20px;
   width: 50vw;
   height: 100vh;
 }
