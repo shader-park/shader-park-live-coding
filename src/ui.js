@@ -16,8 +16,9 @@ const createPermaLink = (state) => {
 
     
     button.addEventListener('click', () => {
-        window.prompt('code', decodeURI(state.code));
-        console.log(decodeURI(state.code));
+        let urlSearchParams = new URLSearchParams(window.location.search);
+        urlSearchParams.set('code', encodeURI(state.code));
+        window.location.search = urlSearchParams.toString();
     }, false);
 }
 
