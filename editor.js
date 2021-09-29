@@ -10,21 +10,26 @@ export function createEditor(codeChangeCallback) {
           fontSize: '20pt',
           color: "white",
           backgroundColor: "transparent",
-          height: '80vh'
+          height: '80vh',
         },
-        ".cm-content": {
+        ".cm-editor, .cm-editor:focused": {
+          outline: "0 !important"
+        },
+        ".cm-content ": {
           caretColor: "#0e9"
         },
         ".cm-scroller": {
             overflow: "scroll",
             border: "none",
-            outline: "none"
+        },
+        "&.cm-focused ": {
+          outline: 0
         },
         "&.cm-focused .cm-cursor": {
           borderLeftColor: "#0e9"
         },
         "&.cm-focused .cm-selectionBackground, ::selection": {
-          backgroundColor: "#074"
+          backgroundColor: "#074",
         },
         ".cm-gutters": {
           backgroundColor: "transparent",

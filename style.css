@@ -19,6 +19,12 @@ body {
   height: 100vh;
 }
 
+@media only screen and (max-width: 800px) {
+  .code-container {
+    width: 100vw;
+  }
+}
+
 h1 {
   font-style: italic;
   color: #373fff;
