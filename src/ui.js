@@ -24,14 +24,18 @@ const createPermaLink = (state) => {
 
 const showHideButtonInteraction = () => {
     let codeContainer = document.querySelector('.code-container');
+    let logo = document.querySelector('.logo');
+    let permalink = document.querySelector('.permalink');
+    let elements = [codeContainer, logo];
+    
     let showHideButton = document.querySelector('.show-hide-editor');
     toggleButton('.show-hide-editor', (active) => {
         if(active) {
-            showHideButton.innerHTML= '>';
-            codeContainer.style.display = 'block';
+            showHideButton.innerHTML= 'Hide Code';
+            elements.forEach(el => el.style.display = 'block');
         } else {
-            showHideButton.innerHTML= '^';
-            codeContainer.style.display = 'none';
+            showHideButton.innerHTML= 'Show Code';
+            elements.forEach(el => el.style.display = 'none');
         }
     });
     // showHideButton.addEventListener('click', (el) => {

@@ -1,5 +1,12 @@
 /* CSS files add styling rules to your content */
 
+@font-face {
+  font-family: 'Regolapro';
+  src: url('./fonts/RegolaPro-Book.woff2') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
 body {
   font-family: helvetica, arial, sans-serif;
   margin: 2em;
@@ -14,7 +21,7 @@ body {
 .code-container {
   position: fixed;
   left: 0px;
-  top: 20px;
+  top: 30px;
   width: 50vw;
   height: 100vh;
 }
@@ -25,10 +32,6 @@ body {
   }
 }
 
-h1 {
-  font-style: italic;
-  color: #373fff;
-}
 
 canvas {
   width: 100%;
@@ -44,4 +47,34 @@ canvas {
   position: fixed;
   top: 0px;
   left: 0px;
+}
+
+.logo {
+  position: fixed;
+  right: 15px;
+  bottom: 10px;
+  margin: 0px;
+  padding: 0px;
+  color: white;
+  font-family: Regolapro;
+  font-weight: 700;
+}
+
+.editor-button {
+  padding: 5px 15px 5px 15px;
+  border-radius: 50px;
+  /* border: 1px solid lightgrey; */
+  /* box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15); */
+  margin-top: 2.5px;
+  transition: all 300ms ease-in-out ;
+  color: rgb(165, 165, 165);
+  border-color: rgb(165, 165, 165);
+  background-color: transparent;
+  -webkit-transition: all 300ms ease-in-out;
+  cursor: pointer;
+}
+.editor-button:hover {
+    color: white;
+    border-color: white;
+    /* box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2); */
 }
