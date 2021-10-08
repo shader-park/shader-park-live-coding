@@ -38,14 +38,11 @@ const createPermaLink2 = (state) => {
     }, false);
 }
 
-const showHideButtonInteraction = () => {
-    let codeContainer = document.querySelector('.code-container');
-    let logo = document.querySelector('.logo');
-    let permalink = document.querySelector('.permalink');
-    let elements = [codeContainer, logo];
-    
-    let showHideButton = document.querySelector('.show-hide-editor');
-    toggleButton('.show-hide-editor', (active) => {
+let showHideButtonInteraction = (codeContainerClass, hideButtonClass) => {
+    let codeContainer = document.querySelector(codeContainerClass);
+    let showHideButton = document.querySelector(hideButtonClass);
+    let elements = [codeContainer];
+    toggleButton(hideButtonClass, (active) => {
         if(active) {
             showHideButton.innerHTML= 'Hide Code';
             elements.forEach(el => el.style.display = 'block');
@@ -54,17 +51,6 @@ const showHideButtonInteraction = () => {
             elements.forEach(el => el.style.display = 'none');
         }
     });
-    // showHideButton.addEventListener('click', (el) => {
-    //     if(showHideButton.classList.contains('show')) {
-    //         showHideButton.classList.remove('show');
-    //         showHideButton.innerHTML= '>';
-    //         codeContainer.style.display = 'block';
-    //     } else {
-    //         showHideButton.classList.add('show')
-    //         showHideButton.innerHTML= '^';
-    //         codeContainer.style.display = 'none';
-    //     }
-    // }, false);
 }
 
 let watchSlider = (params) => {
@@ -84,7 +70,8 @@ let watchCSGModes = (state) => {
 }
 
 export const initUIInteractions = (state, params) => {
-    showHideButtonInteraction();
+    showHideButtonInteraction('.code-container', '.show-hide-editor');
+    showHideButtonInteraction('.code-container2', '.show-hide-editor2');
     createPermaLink1(state);
     createPermaLink2(state);
     watchSlider(params);
