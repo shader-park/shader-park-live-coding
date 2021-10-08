@@ -5226,13 +5226,14 @@ sha.js@^2.4.0, sha.js@^2.4.8:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-shader-park-core@^0.0.270:
-  version "0.0.270"
-  resolved "https://registry.yarnpkg.com/shader-park-core/-/shader-park-core-0.0.270.tgz#884b25d049f734c992a59ac0c13c4fdd836c8321"
-  integrity sha512-zQ1NKctic3WG21b8gqGa1Vo+oxsbHh18D+uTMLftdMkVAweMmg4d5eZDxJfgQDCzBk5hwBLgrR8mY1i8Az/Llw==
+shader-park-core@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/shader-park-core/-/shader-park-core-0.1.0.tgz#603dcaa91fb2dc52e58bc26a91751a8330eec946"
+  integrity sha512-zYspmv73uW4ie4q/KA0LMvt0wVBYr+WLpMht41PQBnmqfmVtaftrhLSs0l0c7SXeHnQLfJoqFBg8nJMK33wd1A==
   dependencies:
     escodegen "^1.11.1"
     esprima "^4.0.1"
+    three "^0.129.0"
 
 shallow-copy@~0.0.1:
   version "0.0.1"

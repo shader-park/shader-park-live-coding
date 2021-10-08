@@ -11,7 +11,7 @@ import {Pane} from 'tweakpane';
 
 // let fonts = JSON.parse(font)
 let state = {
-  csgMode: 'mixGeo(mixAmt);'
+  csgMode: 'mixGeo(mixAmt); \n mixMat(mixAmt);'
 };
 
 // const pane = new Pane();
@@ -62,8 +62,6 @@ if('scale' in qParams) {
 
 state.code = startCode;
 state.code2 = startCode2;
-
-let options = ['union();', 'difference();', 'intersect();', 'blend(mixAmt);', 'mixGeo(mixAmt);']
 
 let blendCode = () => {
   state.mixedCode = `
@@ -141,6 +139,7 @@ let compileShader = () => {
     console.error(error);
   }  
 }
+
 window.blendCode = blendCode;
 window.compileShader = compileShader;
 
