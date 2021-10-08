@@ -11,7 +11,9 @@ import {Pane} from 'tweakpane';
 
 // let fonts = JSON.parse(font)
 let state = {
-  csgMode: 'mixGeo(mixAmt); \n mixMat(mixAmt);'
+  csgMode: 'mixGeo(mixAmt); \n mixMat(mixAmt);',
+  player: 'main',
+  webSocket: ''
 };
 
 // const pane = new Pane();
@@ -49,18 +51,16 @@ if ('torus' in qParams) {
 }
 
 let webSocket = new WebSocket('wss://websocket-server-template.herokuapp.com')
-
+state.webSocket = webSocket;
 webSocket.onopen = (event) => {
   console.log('connected');
   setInterval(() => { webSocket.send(JSON.stringify({'sender' : 'keepAlive'})); }, 3000);
 };
 
-let player = 'main';
-
 if('player1' in qParams) {
-  player = 'player1';
+  state.player = 'player1';
 } else if('player2' in qParams) {
-  player = 'player2';
+  state.player = 'player2';
 }
 
 if ('code' in qParams) {
@@ -133,12 +133,12 @@ const uniformsToExclude = { 'sculptureCenter': 0, 'msdf': 0, 'opacity': 0, 'time
 
 let onCodeChange = (code) => {
   state.code = code;
-  if(player == 'main') {
-    blendCode();
-    compileShader();
-  } else if(player == 'player1') {
+  if(state.player === 'main') {
+    // blendCode();
+    // compileShader();
+  } else if(state.player === 'player1') {
     let message = {
-      'sender' : player,
+      'sender' : state.player,
       'code' : code
     }
     webSocket.send(JSON.stringify(message));
@@ -150,12 +150,12 @@ let onCodeChange = (code) => {
 let onCode2Change = (code) => {
   console.log('code2 change');
   state.code2 = code;
-  if(player == 'main') {
-    blendCode();
-    compileShader();
-  } else if(player == 'player2') {
+  if(state.player === 'main') {
+    // blendCode();
+    // compileShader();
+  } else if(state.player === 'player2') {
     let message = {
-      'sender' : player,
+      'sender' : state.player,
       'code' : code
     }
     webSocket.send(JSON.stringify(message));
@@ -194,17 +194,26 @@ webSocket.onmessage = function (event) {
   try {
     let data = JSON.parse(event.data.toString())
     if('code' in data) {
-      if(data['sender'] == 'player1') {
-        state.code = data['code'];
-        let transaction = editor.state.update({changes: {from: 0, to: editor.state.doc.length, insert: state.code}})
+      if(data['sender'] === 'player1') {
+        // state.code = data['code'];
+        let transaction = editor.state.update({changes: {from: 0, to: editor.state.doc.length, insert: data['code']}})
         editor.dispatch(transaction);
       } else {
-        state.code2 = data['code'];
-        let transaction = editor2.state.update({changes: {from: 0, to: editor2.state.doc.length, insert: state.code2}})
+        // state.code2 = data['code'];
+        let transaction = editor2.state.update({changes: {from: 0, to: editor2.state.doc.length, insert: data['code']}})
         editor2.dispatch(transaction);
       }
       // blendCode();
       // compileShader();
+    }
+    if('compile' in data && state.player === 'main') {
+      if(data['sender'] === 'player1') {
+        state.code = editor.state.doc.toString()
+      } else if (data['sender'] === 'player2') {
+        state.code2 = editor2.state.doc.toString()
+      }
+      blendCode();
+      compileShader();
     }
     // console.log('json', data);
   } catch (e) {

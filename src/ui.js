@@ -1,3 +1,5 @@
+import { StateEffect } from "@codemirror/state";
+
 const toggleButton = (className, callback) => {
     let button = document.querySelector(className);
     button.addEventListener('click', (el) => {
@@ -69,6 +71,28 @@ let watchCSGModes = (state) => {
     }, false);
 }
 
+let watchCompileButton = (state, className) => {
+    let compile = document.querySelector(className);
+    compile.addEventListener('click', () => {
+        if(state.player !== 'main') {
+            console.log(state.webSocket);
+            state.webSocket.send(JSON.stringify({'sender': state.player, 'compile': true}))
+            if(state.player === 'player1') {
+                state.mixedCode = window.editor.state.doc.toString() + '\n let mixAmt = input();'
+            } else if (state.player === 'player2') {
+                state.mixedCode = window.editor2.state.doc.toString() + '\n let mixAmt = input();'
+            }
+            compileShader();
+        } else {
+            state.code = window.editor.state.doc.toString()
+            state.code2 = window.editor2.state.doc.toString()
+            window.blendCode();
+            window.compileShader();
+        }
+
+    }, false);
+}
+
 export const initUIInteractions = (state, params) => {
     showHideButtonInteraction('.code-container', '.show-hide-editor');
     showHideButtonInteraction('.code-container2', '.show-hide-editor2');
@@ -76,6 +100,8 @@ export const initUIInteractions = (state, params) => {
     createPermaLink2(state);
     watchSlider(params);
     watchCSGModes(state);
+    watchCompileButton(state, '.compile')
+    watchCompileButton(state, '.compile2');
     // createPermaLink('.permalink', 'code', state.code);
     // createPermaLink('.permalink2', 'code2', state.code2);
 }
