@@ -16,6 +16,7 @@
     "@codemirror/commands": "^0.19.5",
     "@codemirror/lang-javascript": "^0.19.2",
     "@codemirror/next": "^0.16.0",
+    "parcel-plugin-inline-source": "^1.0.0",
     "shader-park-core": "^0.0.270",
     "three": "^0.129.0",
     "tweakpane": "^3.0.5"

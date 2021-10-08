@@ -7,7 +7,6 @@ import {createEditor} from './src/editor.js';
 import {Pane} from 'tweakpane';
 
 
-
 // import {font} from './src/helvetiker_regular1.typeface.json';
 
 // let fonts = JSON.parse(font)
