@@ -70,7 +70,7 @@ const showHideButtonInteraction = () => {
 let watchSlider = (params) => {
     let slider = document.querySelector('.slider');
     slider.addEventListener('input', () => {
-        params.mixAmt = slider.value;
+        params.mixAmt = 1.0-slider.value;
     }, false);
 }
 
