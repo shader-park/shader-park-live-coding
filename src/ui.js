@@ -74,11 +74,21 @@ let watchSlider = (params) => {
     }, false);
 }
 
+let watchCSGModes = (state) => {
+    let select = document.querySelector('.csgModes');
+    select.addEventListener('change', () => {
+        state.csgMode = select.value;
+        window.blendCode();
+        window.compileShader();
+    }, false);
+}
+
 export const initUIInteractions = (state, params) => {
     showHideButtonInteraction();
     createPermaLink1(state);
     createPermaLink2(state);
-    watchSlider(params)
+    watchSlider(params);
+    watchCSGModes(state);
     // createPermaLink('.permalink', 'code', state.code);
     // createPermaLink('.permalink2', 'code2', state.code2);
 }

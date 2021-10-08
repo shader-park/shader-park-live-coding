@@ -10,7 +10,9 @@ import {Pane} from 'tweakpane';
 // import {font} from './src/helvetiker_regular1.typeface.json';
 
 // let fonts = JSON.parse(font)
-let state = {};
+let state = {
+  csgMode: 'mixGeo(mixAmt);'
+};
 
 // const pane = new Pane();
 
@@ -61,13 +63,15 @@ if('scale' in qParams) {
 state.code = startCode;
 state.code2 = startCode2;
 
+let options = ['union();', 'difference();', 'intersect();', 'blend(mixAmt);', 'mixGeo(mixAmt);']
+
 let blendCode = () => {
   state.mixedCode = `
 let mixAmt = input();
 shape(() => {
 ${state.code}
 })();
-mixGeo(mixAmt);
+${state.csgMode}
 shape(() => {
 ${state.code2}
 })();`
@@ -79,7 +83,6 @@ let mesh = createSculptureWithGeometry(geometry, state.mixedCode, () => ( {
     mixAmt: params.mixAmt,
     _scale: scale
 } ));
-
 
 scene.add(mesh);
 
@@ -113,9 +116,7 @@ camera.position.z = 2;
 
 window.controls = controls;
 
-const uniformsToExclude = { 'sculptureCenter': 0, 'msdf': 0, 'opacity': 0, 'time': 0, 'stepSize': 0, '_scale' : 1, 'resolution': 0};;
-
-
+const uniformsToExclude = { 'sculptureCenter': 0, 'msdf': 0, 'opacity': 0, 'time': 0, 'stepSize': 0, '_scale' : 1, 'resolution': 0};
 
 let onCodeChange = (code) => {
   state.code = code;
@@ -140,6 +141,8 @@ let compileShader = () => {
     console.error(error);
   }  
 }
+window.blendCode = blendCode;
+window.compileShader = compileShader;
 
 /////Editor
 let editor = createEditor(startCode, onCodeChange);

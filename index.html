@@ -14,8 +14,17 @@
       <button class="permalink editor-button">Permalink</button>
     </div>
     <div class="code-container"></div>
-    
-    <input type="range" min="0" max="1" step=".001" class='slider'>
+
+    <div class="csg-modes-container">
+      <select name="modes" class='csgModes'>
+        <option value="union();">Union</option>
+        <option value="difference()">Difference</option>
+        <option value="intersect();">Intersect</option>
+        <option value="blend(mixAmt);">Blend</option>
+        <option value="mixGeo(mixAmt);" selected="selected">Mix</option>
+      </select>
+      <input type="range" min="0" max="1" step=".001" class='slider'>
+    </div>
 
     <div class="editor-right">
       <button class="show-hide-editor editor-button">Hide Code</button>
