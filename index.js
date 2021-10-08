@@ -48,6 +48,21 @@ if ('torus' in qParams) {
   geometry.center();
 }
 
+let webSocket = new WebSocket('wss://websocket-server-template.herokuapp.com')
+
+webSocket.onopen = (event) => {
+  console.log('connected');
+  setInterval(() => { webSocket.send(JSON.stringify({'sender' : 'keepAlive'})); }, 3000);
+};
+
+let player = 'main';
+
+if('player1' in qParams) {
+  player = 'player1';
+} else if('player2' in qParams) {
+  player = 'player2';
+}
+
 if ('code' in qParams) {
   startCode = decodeURI(qParams['code'])
 }
@@ -118,14 +133,30 @@ const uniformsToExclude = { 'sculptureCenter': 0, 'msdf': 0, 'opacity': 0, 'time
 
 let onCodeChange = (code) => {
   state.code = code;
-  blendCode();
-  compileShader();
+  if(player == 'main') {
+    blendCode();
+    compileShader();
+  } else if(player == 'player1') {
+    let message = {
+      'sender' : player,
+      'code' : code
+    }
+    webSocket.send(JSON.stringify(message));
+  }
 }
 
 let onCode2Change = (code) => {
   state.code2 = code;
-  blendCode();
-  compileShader();
+  if(player == 'main') {
+    blendCode();
+    compileShader();
+  } else if(player == 'player2') {
+    let message = {
+      'sender' : player,
+      'code' : code
+    }
+    webSocket.send(JSON.stringify(message));
+  }
 }
 
 let compileShader = () => {
@@ -145,13 +176,37 @@ window.compileShader = compileShader;
 
 /////Editor
 let editor = createEditor(startCode, onCodeChange);
-// window.editor = editor;
+window.editor = editor;
 let editor2 = createEditor(startCode2, onCode2Change);
 let codeContainer2 = document.querySelector('.code-container2');
 codeContainer2.appendChild(editor2.dom);
-// window.editor = editor;
+window.editor2 = editor2;
 let codeContainer = document.querySelector('.code-container');
 codeContainer.appendChild(editor.dom);
+
+webSocket.onmessage = function (event) {
+  // console.log(event.data.toString());
+  try {
+    let data = JSON.parse(event.data.toString())
+    if('code' in data) {
+      if(data['sender'] == 'player1') {
+        state.code = data['code'];
+        // editor.state.update({changes: {from: 0, to: editor.state.doc.length, insert: state.code}})
+        // editor.update()
+      } else {
+        state.code2 = data['code'];
+        // editor2.state.update({changes: {from: 0, to: editor2.state.doc.length, insert: state.code2}})
+        // editor2.update()
+      }
+      blendCode();
+      compileShader();
+    }
+    // console.log('json', data);
+  } catch (e) {
+    console.error(e);
+  }
+  
+}
 
 let onWindowResize = () => {
   camera.aspect = window.innerWidth / window.innerHeight;
