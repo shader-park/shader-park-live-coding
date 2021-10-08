@@ -132,7 +132,7 @@ window.controls = controls;
 const uniformsToExclude = { 'sculptureCenter': 0, 'msdf': 0, 'opacity': 0, 'time': 0, 'stepSize': 0, '_scale' : 1, 'resolution': 0};
 
 let onCodeChange = (code) => {
-  state.code = code;
+  // state.code = code;
   if(state.player === 'main') {
     // blendCode();
     // compileShader();
@@ -148,8 +148,8 @@ let onCodeChange = (code) => {
 }
 
 let onCode2Change = (code) => {
-  console.log('code2 change');
-  state.code2 = code;
+  // console.log('code2 change');
+  // state.code2 = code;
   if(state.player === 'main') {
     // blendCode();
     // compileShader();
