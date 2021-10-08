@@ -142,10 +142,13 @@ let onCodeChange = (code) => {
       'code' : code
     }
     webSocket.send(JSON.stringify(message));
+    state.mixedCode = code + '\n let mixAmt = input();';
+    compileShader();
   }
 }
 
 let onCode2Change = (code) => {
+  console.log('code2 change');
   state.code2 = code;
   if(player == 'main') {
     blendCode();
@@ -156,6 +159,8 @@ let onCode2Change = (code) => {
       'code' : code
     }
     webSocket.send(JSON.stringify(message));
+    state.mixedCode = code + '\n let mixAmt = input();';
+    compileShader()
   }
 }
 
@@ -191,15 +196,15 @@ webSocket.onmessage = function (event) {
     if('code' in data) {
       if(data['sender'] == 'player1') {
         state.code = data['code'];
-        // editor.state.update({changes: {from: 0, to: editor.state.doc.length, insert: state.code}})
-        // editor.update()
+        let transaction = editor.state.update({changes: {from: 0, to: editor.state.doc.length, insert: state.code}})
+        editor.dispatch(transaction);
       } else {
         state.code2 = data['code'];
-        // editor2.state.update({changes: {from: 0, to: editor2.state.doc.length, insert: state.code2}})
-        // editor2.update()
+        let transaction = editor2.state.update({changes: {from: 0, to: editor2.state.doc.length, insert: state.code2}})
+        editor2.dispatch(transaction);
       }
-      blendCode();
-      compileShader();
+      // blendCode();
+      // compileShader();
     }
     // console.log('json', data);
   } catch (e) {
