@@ -26,11 +26,19 @@ body {
   height: 100vh;
 }
 
-@media only screen and (max-width: 800px) {
+.code-container2 {
+  position: fixed;
+  right: 0px;
+  top: 30px;
+  width: 50vw;
+  height: 100vh;
+}
+
+/* @media only screen and (max-width: 800px) {
   .code-container {
     width: 100vw;
   }
-}
+} */
 
 
 canvas {
@@ -43,10 +51,16 @@ canvas {
   background-color : transparent;
 }
 
-.editor-action-buttons {
+.editor-left {
   position: fixed;
   top: 0px;
   left: 0px;
+}
+
+.editor-right {
+  position: fixed;
+  top: 0px;
+  right: 0px;
 }
 
 .logo {
@@ -77,4 +91,12 @@ canvas {
     color: white;
     border-color: white;
     /* box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2); */
+}
+
+.slider {
+  z-index: 2;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 20px;
 }

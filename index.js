@@ -14,12 +14,14 @@ let state = {};
 
 // const pane = new Pane();
 
-initUIInteractions(state);
+
 
 let startCode = spCode();
+let startCode2 = 'sphere(.5);';
 
 let scene = new Scene();
-let params = { time: 0, test: {'x':.2, 'y': .4}};
+let params = { time: 0, mixAmt: 0.1};
+initUIInteractions(state, params);
 // pane.addInput(
 //   params, 'test',
 //   {min: 0, max: 2 }
@@ -47,15 +49,34 @@ if ('torus' in qParams) {
 if ('code' in qParams) {
   startCode = decodeURI(qParams['code'])
 }
+if ('code2' in qParams) {
+  startCode2 = decodeURI(qParams['code2']);
+}
+
 let scale = 1.0;
 if('scale' in qParams) {
   scale = qParams['scale'];
 }
 
 state.code = startCode;
+state.code2 = startCode2;
+
+let blendCode = () => {
+  state.mixedCode = `
+let mixAmt = input();
+shape(() => {
+${state.code}
+})();
+mixGeo(mixAmt);
+shape(() => {
+${state.code2}
+})();`
+}
+blendCode();
 // Shader Park Setup
-let mesh = createSculptureWithGeometry(geometry, startCode, () => ( {
+let mesh = createSculptureWithGeometry(geometry, state.mixedCode, () => ( {
     time: params.time,
+    mixAmt: params.mixAmt,
     _scale: scale
 } ));
 
@@ -64,8 +85,8 @@ scene.add(mesh);
 
 if( 'text' in qParams) {
   const loader = new FontLoader();
-
-  loader.load( './helvetiker_regular1.typeface.json', function ( font ) {
+    // './helvetiker_regular1.typeface.json'
+    loader.load('https://cdn.glitch.com/44b034f5-6c9a-414c-96b3-8280ecf82f27%2Fhelvetiker_regular.typeface.json?v=1615399030749', function ( font ) {
     mesh.geometry = new TextBufferGeometry( qParams['text'], {
       font: font,
       size: 2,
@@ -94,29 +115,39 @@ window.controls = controls;
 
 const uniformsToExclude = { 'sculptureCenter': 0, 'msdf': 0, 'opacity': 0, 'time': 0, 'stepSize': 0, '_scale' : 1, 'resolution': 0};;
 
+
+
 let onCodeChange = (code) => {
   state.code = code;
-  try {
-    // let newMesh = createSculpture(code, () => ( {
-    //   time: params.time,
-    // } ));
-    // scene.remove(mesh);
-    // scene.add(newMesh);
-    // mesh = newMesh;
+  blendCode();
+  compileShader();
+}
 
-    mesh.material = sculptToThreeJSMaterial(code);
+let onCode2Change = (code) => {
+  state.code2 = code;
+  blendCode();
+  compileShader();
+}
+
+let compileShader = () => {
+  try {
+    mesh.material = sculptToThreeJSMaterial(state.mixedCode);
     let uniforms = mesh.material.uniformDescriptions;
     uniforms = uniforms.filter(uniform => !(uniform.name in uniformsToExclude))
     
     console.log(uniforms);
   } catch (error) {
     console.error(error);
-  }
+  }  
 }
 
 /////Editor
 let editor = createEditor(startCode, onCodeChange);
-window.editor = editor;
+// window.editor = editor;
+let editor2 = createEditor(startCode2, onCode2Change);
+let codeContainer2 = document.querySelector('.code-container2');
+codeContainer2.appendChild(editor2.dom);
+// window.editor = editor;
 let codeContainer = document.querySelector('.code-container');
 codeContainer.appendChild(editor.dom);
 

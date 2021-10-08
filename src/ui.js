@@ -11,13 +11,29 @@ const toggleButton = (className, callback) => {
     }, false);
 }
 
-const createPermaLink = (state) => {
-    let button = document.querySelector('.permalink');
+const createPermaLink = (className, queryParam, currCode) => {
+    let button = document.querySelector(className);
+    button.addEventListener('click', () => {
+        let urlSearchParams = new URLSearchParams(window.location.search);
+        urlSearchParams.set(queryParam, encodeURI(currCode));
+        window.location.search = urlSearchParams.toString();
+    }, false);
+}
 
-    
+const createPermaLink1 = (state) => {
+    let button = document.querySelector('.permalink');
     button.addEventListener('click', () => {
         let urlSearchParams = new URLSearchParams(window.location.search);
         urlSearchParams.set('code', encodeURI(state.code));
+        window.location.search = urlSearchParams.toString();
+    }, false);
+}
+
+const createPermaLink2 = (state) => {
+    let button = document.querySelector('.permalink2');
+    button.addEventListener('click', () => {
+        let urlSearchParams = new URLSearchParams(window.location.search);
+        urlSearchParams.set('code2', encodeURI(state.code2));
         window.location.search = urlSearchParams.toString();
     }, false);
 }
@@ -51,7 +67,18 @@ const showHideButtonInteraction = () => {
     // }, false);
 }
 
-export const initUIInteractions = (state) => {
+let watchSlider = (params) => {
+    let slider = document.querySelector('.slider');
+    slider.addEventListener('input', () => {
+        params.mixAmt = slider.value;
+    }, false);
+}
+
+export const initUIInteractions = (state, params) => {
     showHideButtonInteraction();
-    createPermaLink(state);
+    createPermaLink1(state);
+    createPermaLink2(state);
+    watchSlider(params)
+    // createPermaLink('.permalink', 'code', state.code);
+    // createPermaLink('.permalink2', 'code2', state.code2);
 }
