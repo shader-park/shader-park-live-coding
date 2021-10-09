@@ -66,6 +66,9 @@ let watchCSGModes = (state) => {
     let select = document.querySelector('.csgModes');
     select.addEventListener('change', () => {
         state.csgMode = select.value;
+        if(select.value === 'mix') {
+            state.csgMode = 'mixGeo(mixAmt); \n mixMat(mixAmt);'
+        }
         window.blendCode();
         window.compileShader();
     }, false);
