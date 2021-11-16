@@ -1,6 +1,8 @@
 dist/
 dist.zip
 
+.DS_Store
+
 # Logs
 logs
 *.log

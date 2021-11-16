@@ -1,11 +1,11 @@
 /* CSS files add styling rules to your content */
 
-@font-face {
+/* @font-face {
   font-family: 'Regolapro';
   src: url('./fonts/RegolaPro-Book.woff2') format('opentype');
   font-weight: 700;
   font-style: normal;
-}
+} */
 
 body {
   font-family: helvetica, arial, sans-serif;
@@ -56,7 +56,7 @@ canvas {
   margin: 0px;
   padding: 0px;
   color: white;
-  font-family: Regolapro, Helvetica, Arial, sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
   font-weight: 700;
 }
 
