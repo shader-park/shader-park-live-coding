@@ -94,7 +94,7 @@ sphereSegments(5, .8);
 
   let opMode = () => {
     let prob = fxrand();
-    if(prob < .9) {
+    if(prob < .05) {
       features['Shape'] = 'Inside Torus';
       features['CSG Intersect'] = 'Difference';
       return '';
@@ -200,7 +200,9 @@ let col = gy * n * 0.1;
 metal(abs(n) * 2);
 shine(.2);
 let phase = input(.5, 0, 10);
-${color()}${shape()}${mode}
+${color()}
+${shape()}
+${mode}
 setSDF(gy + n * ${sdfNoiseScale});
 ${after()}`;
 };
