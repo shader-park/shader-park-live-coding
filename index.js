@@ -123,12 +123,17 @@ if('scale' in qParams) {
 
 state.code = startCode;
 
-let gyScale = fxrand()*20+5;
+let gyMaxScale = 20;
+if(window.$fxhashFeatures['Shape'] == 'Grid Spheres' || window.$fxhashFeatures['Shape'] == 'Grid Lines') {
+  gyMaxScale = 5;
+}
+
+let gyScale = fxrand()*gyMaxScale+5;
 let noiseScale = fxrand()*200+5;
 let phase = fxrand();
 
 if(window.$fxhashFeatures['Noise Enabled']) {
-  window.$fxhashFeatures['Noise Scale'] = getFeatureString(noiseScale, 205);
+  window.$fxhashFeatures['Noise Scale'] = getFeatureString(noiseScale, gyScale+5);
 }
 window.$fxhashFeatures['Gyroid Scale'] = getFeatureString(gyScale, 25);
 window.$fxhashFeatures['Color Phase'] = getFeatureString(phase, 1.0);

@@ -39,7 +39,11 @@ export function spCode()  {
 
   let shape = () => {
     let prob = fxrand();
+    // prob = .14
     if(prob < .1) {
+      if(features['Noise Enabled']) {
+        return shape();
+      }
       features['Shape'] = 'Grid Lines';
       return `let spacer = .045;
 let reps = 3;
@@ -48,6 +52,9 @@ layoutGrid(reps, spacer, shape((i) => {
 }));
 ${layoutGrid}`;
     } else if (prob < .15) {
+      if(features['Noise Enabled']) {
+        return shape();
+      }
       features['Shape'] = 'Grid Spheres';
       return `let spacer = .03;
 let reps = 4;
@@ -80,9 +87,6 @@ sphereSegments(5, .8);
 
   let opMode = () => {
     let prob = fxrand();
-    if(features['Raymarching Iterations'] == 'Low') {
-      prob = .2;
-    }
     if(prob < .1) {
       features['CSG Intersect'] = 'Intersect';
       return `intersect();`
@@ -101,7 +105,7 @@ sphereSegments(5, .8);
 
   let maxIterations = () => {
     let prob = fxrand();
-    if(prob < .1) {
+    if(prob < .5 && features['CSG Mode'] == 'Mix') {
       features['Raymarching Iterations'] = 'Low';
       features['Dark Mode'] = true;
       return `setMaxIterations(10);`;
