@@ -55,7 +55,7 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setPixelRatio( window.devicePixelRatio );
 
 let clearCol = new Color(1, 1, 1);
-if(window.$fxhashFeatures['Dark Mode']) {
+if(window.$fxhashFeatures['Editor Dark Mode']) {
   clearCol = new Color(0, 0, 0);
 } else {
   document.querySelector('.logo').style.color = 'black';
@@ -90,7 +90,7 @@ composer.addPass( pass );
 
 let edgeRand = fxrand();
 if(edgeRand < .05) {
-  window.$fxhashFeatures['Dark Mode'] = true;
+  window.$fxhashFeatures['Editor Dark Mode'] = true;
   window.$fxhashFeatures['Edge'] = true;
   window.$fxhashFeatures['Black & White'] = true;
   let effectGrayScale = new ShaderPass( LuminosityShader );
@@ -124,7 +124,9 @@ if('scale' in qParams) {
 state.code = startCode;
 
 let gyMaxScale = 20;
-if(window.$fxhashFeatures['Shape'] == 'Grid Spheres' || window.$fxhashFeatures['Shape'] == 'Grid Lines') {
+if(window.$fxhashFeatures['Shape'] == 'Grid Spheres' || 
+   window.$fxhashFeatures['Shape'] == 'Grid Lines' || 
+   window.$fxhashFeatures['Shape'] == 'Inside Torus') {
   gyMaxScale = 5;
 }
 

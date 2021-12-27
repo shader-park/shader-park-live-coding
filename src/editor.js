@@ -5,10 +5,10 @@ import {javascript} from "@codemirror/lang-javascript"
 
 export function createEditor(startCode, codeChangeCallback) {
     console.log('curreFeatures', window.$fxhashFeatures)
-    console.log('curreFeatures', window.$fxhashFeatures['Dark Mode'])
+    console.log('curreFeatures', window.$fxhashFeatures['Editor Dark Mode'])
     let fontColor = 'black';
     let bgTextHeighlightColor = '#3c73a3';
-    if(window.$fxhashFeatures['Dark Mode']) {
+    if(window.$fxhashFeatures['Editor Dark Mode']) {
       fontColor = 'white';
       bgTextHeighlightColor = '#0d1924';
     }

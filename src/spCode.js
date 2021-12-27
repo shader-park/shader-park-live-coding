@@ -11,12 +11,12 @@ export function getFeatureString(val, max) {
 export function spCode()  {
   let features = {};
 
-  // Dark Mode
+  // Editor Dark Mode
   let darkModeProb = fxrand();
   if(darkModeProb < .5) {
-    features['Dark Mode'] = true;
+    features['Editor Dark Mode'] = true;
   } else {
-    features['Dark Mode'] = false;
+    features['Editor Dark Mode'] = false;
   }
 
   let mirror = () => {
@@ -34,16 +34,16 @@ export function spCode()  {
   };
 
   let layoutGrid = `function layoutGrid(reps, spacerSize, draw) {
-    for(let i = 0; i < reps; i++) {
-      repeat(vec3(spacerSize * i, spacerSize * i , spacerSize * i) , vec3(reps, reps, reps));
-      draw(i / reps);
-    }
-  };`
+  for(let i = 0; i < reps; i++) {
+    repeat(vec3(spacerSize * i, spacerSize * i , spacerSize * i) , vec3(reps, reps, reps));
+    draw(i / reps);
+  }
+};`
 
   let shape = () => {
     let prob = fxrand();
     if(features['Shape'] == 'Inside Torus') {
-      features['Dark Mode'] = true;
+      features['Editor Dark Mode'] = true;
       return '';
     }
 
@@ -72,15 +72,15 @@ ${layoutGrid}`;
     } else if(prob < .2) {
       features['Shape'] = 'Torus';
       return `rotateX(PI/2);
-torus(vec2(.5+n*.001));`
+torus(vec2(.5 + n * .001));`
     } else if(prob < .4) {
       features['Shape'] = 'Sphere';
-      return `sphere(.9+n*.001);`
+      return `sphere(.9 + n * .001);`
     } else if (prob < .5) {
       features['Shape'] = 'Sphere Segments';
       return `let sphereSegments = shape((maxIter, maxSize) => {
   for(let i = 1.0; i <= maxIter; i++) {
-    sphere(pow(maxSize/(i*1.0), .35));
+    sphere(pow(maxSize / i, .35));
     shell(.01);
   }
 });
@@ -88,7 +88,7 @@ sphereSegments(5, .8);
 `;
     } else {
       features['Shape'] = 'Box';
-      return `box(vec3(.64+n*.001));`
+      return `box(vec3(.64 + n * .001));`
     }
   }
 
@@ -96,10 +96,10 @@ sphereSegments(5, .8);
     let prob = fxrand();
     if(prob < .05) {
       features['Shape'] = 'Inside Torus';
-      features['CSG Intersect'] = 'Difference';
+      features['CSG Mode'] = 'Difference';
       return '';
     } else if(prob < .1) {
-      features['CSG Intersect'] = 'Intersect';
+      features['CSG Mode'] = 'Intersect';
       return `intersect();`
     } else if(prob < .4) {
       features['CSG Mode'] = 'Mix';
@@ -109,7 +109,7 @@ sphereSegments(5, .8);
       features['CSG Mode'] = 'Mix';
       return `mixGeo(${mixAmt});`
     } else {
-      features['CSG Intersect'] = 'Difference';
+      features['CSG Mode'] = 'Difference';
       return `difference();`
     } 
   }
@@ -118,12 +118,12 @@ sphereSegments(5, .8);
     let prob = fxrand();
     if(prob < .5 && features['CSG Mode'] == 'Mix') {
       features['Raymarching Iterations'] = 'Low';
-      features['Dark Mode'] = true;
+      features['Editor Dark Mode'] = true;
       return `setMaxIterations(10);`;
     } else {
       features['Raymarching Iterations'] = 'High';
       return ``;
-    }    
+    }
   }
 
   let noise = () => {
@@ -181,15 +181,14 @@ torus(2.0, 2.0);`;
   return `let goWild = input();
 function gyroid(scale) {
   let s = getSpace();
-  s = s* scale;
-  let v = mix(sin(s+time), tan(s+nsin(time)*.2), goWild);
-  return dot(v, cos(vec3(s.z, s.x, s.y) + time))/ scale ;
-  // return dot(sin(s+time), cos(vec3(s.z, s.x, s.y) + time))/ scale ;
+  s = s * scale;
+  let v = mix(sin(s + time), tan(s + nsin(time) * .2), goWild);
+  return dot(v, cos(vec3(s.z, s.x, s.y) + time)) / scale ;
 }
 ${maxIterations()}
 setStepSize(.4);
 let noiseScale = input(20, 0, 200);
-lightDirection(getRayDirection())
+lightDirection(getRayDirection());
 ${mirror()}
 let gyScale = input(10, 0, 200);
 let gy = gyroid(gyScale);
