@@ -80,6 +80,9 @@ sphereSegments(5, .8);
 
   let opMode = () => {
     let prob = fxrand();
+    if(features['Raymarching Iterations'] == 'Low') {
+      prob = .2;
+    }
     if(prob < .1) {
       features['CSG Intersect'] = 'Intersect';
       return `intersect();`
