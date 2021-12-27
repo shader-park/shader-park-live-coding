@@ -57,6 +57,8 @@ if(window.$fxhashFeatures['Dark Mode']) {
   clearCol = new Color(0, 0, 0);
 } else {
   document.querySelector('.logo').style.color = 'black';
+  document.querySelector('.wild').classList.add('light-mode')
+  document.querySelector('.show-hide-editor').classList.add('light-mode')
 }
 renderer.setClearColor( clearCol, 1 );
 document.body.appendChild( renderer.domElement );

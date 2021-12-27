@@ -6,7 +6,14 @@ import {javascript} from "@codemirror/lang-javascript"
 export function createEditor(startCode, codeChangeCallback) {
     console.log('curreFeatures', window.$fxhashFeatures)
     console.log('curreFeatures', window.$fxhashFeatures['Dark Mode'])
-    let fontColor = window.$fxhashFeatures['Dark Mode']? 'white': 'black';
+    let fontColor = 'black';
+    let bgTextHeighlightColor = '#3c73a3';
+    if(window.$fxhashFeatures['Dark Mode']) {
+      fontColor = 'white';
+      bgTextHeighlightColor = '#0d1924';
+    }
+
+    
     let baseTheme = EditorView.theme({
         "&": {
           fontSize: '12pt',
@@ -19,6 +26,9 @@ export function createEditor(startCode, codeChangeCallback) {
         },
         ".cm-content ": {
           caretColor: "#0e9"
+        },
+        ".cm-activeLine": {
+          backgroundColor: bgTextHeighlightColor
         },
         ".cm-scroller": {
             overflow: "scroll",
