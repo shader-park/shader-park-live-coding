@@ -19,11 +19,7 @@ initUIInteractions(state);
 let startCode = spCode();
 
 let scene = new Scene();
-let params = { time: 0, test: {'x':.2, 'y': .4}};
-// pane.addInput(
-//   params, 'test',
-//   {min: 0, max: 2 }
-// );
+let params = { time: 0 };
 
 let camera = new PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
 camera.position.z = 4;
@@ -32,7 +28,13 @@ let renderer = new WebGLRenderer({ antialias: true, transparent: true });
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setPixelRatio( window.devicePixelRatio );
 
-renderer.setClearColor( new Color(1, 1, 1), 0 );
+let clearCol = new Color(1, 1, 1);
+if(window.$fxhashFeatures['Dark Mode']) {
+  clearCol = new Color(0, 0, 0);
+} else {
+  document.querySelector('.logo').style.color = 'black';
+}
+renderer.setClearColor( clearCol, 1 );
 document.body.appendChild( renderer.domElement );
 
 let geometry  = new SphereGeometry(2, 45, 45);

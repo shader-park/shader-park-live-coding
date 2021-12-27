@@ -5,6 +5,15 @@
 
 export function spCode()  {
   let features = {};
+
+  // Dark Mode
+  let darkModeProb = fxrand();
+  if(darkModeProb < .5) {
+    features['Dark Mode'] = true;
+  } else {
+    features['Dark Mode'] = false;
+  }
+
   let mirror = () => {
     if(fxrand() > .4) {
       
@@ -18,7 +27,6 @@ export function spCode()  {
 
   let shape = () => {
     let prob = fxrand();
-    console.log(prob)
     if(prob < .1) {
       features['Shape'] = 'Grid';
       return `let spacer = .06;
@@ -62,6 +70,7 @@ sphereSegments(5, .8);
     console.log(prob)
     if(prob < .1) {
       features['Raymarching Iterations'] = 'Low';
+      features['Dark Mode'] = true;
       return `setMaxIterations(10);`;
     } else {
       features['Raymarching Iterations'] = 'High';
@@ -83,19 +92,22 @@ sphereSegments(5, .8);
 
   let color = ()=> {
     let prob = fxrand();
-    if(prob<.9) {
+    if(prob < .5) {
       features['Color'] = 'Black & White';
       let occlusionAmt = -100;
-      console.log('nose enableed', features['Noise Enabled'])
       if(features['Noise Enabled']) {
         occlusionAmt = -30;
       }
-      return `color(vec3(length(col))+glo*.02);
+      return `color(vec3(length(col)) + glo * .02);
 occlusion(${occlusionAmt})`;
       
     } else {
       features['Color'] = 'Depth';
-      return `color(cosPallette(length(s), vec3(.5), vec3(.5), vec3(.5, 0, 1), vec3(phase))+glo*.3);
+      return `let cosPallette = (t, brightness, contrast, oscillation, phase) => {
+  return brightness + contrast * cos(PI * 2 * (oscillation * t + phase));
+}
+
+color(cosPallette(length(getSpace()), vec3(.5), vec3(.5), vec3(.5, 0, 1), vec3(phase)) + glo * .3);
 occlusion(-4);`
     }
   }
@@ -119,28 +131,20 @@ occlusion(-4);`
 ${maxIterations()}
 setStepSize(.4);
 let noiseScale = input(20, 0, 200);
-//backgroundColor(0, 0, 0);
 lightDirection(getRayDirection())
 ${mirror()}
 let gyScale = input(10, 0, 200);
 let gy = gyroid(gyScale);
 
 ${noise()}
-let glo = max(1.0-1.0*dot(-1.0*normal,getRayDirection()),0.0);
+let glo = max(1.0-1.0*dot(-1.0 * normal, getRayDirection()), 0.0);
 let col = gy * n * 0.1;
 metal(abs(n) * 2);
 shine(.2);
-
-let cosPallette = (t, brightness, contrast, oscelation, phase) => {
-  return brightness + contrast * cos(PI*2*(oscelation*t+phase));
-}
-
 let phase = input(.5, 0, 10);
-let s = getSpace();
 ${color()}
 
 ${shape()}
 intersect();
-setSDF(gy+n*.01);
-`;
+setSDF(gy + n * .01);`;
 };

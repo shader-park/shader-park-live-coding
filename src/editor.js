@@ -4,12 +4,15 @@ import {indentWithTab} from "@codemirror/commands"
 import {javascript} from "@codemirror/lang-javascript"
 
 export function createEditor(startCode, codeChangeCallback) {
+    console.log('curreFeatures', window.$fxhashFeatures)
+    console.log('curreFeatures', window.$fxhashFeatures['Dark Mode'])
+    let fontColor = window.$fxhashFeatures['Dark Mode']? 'white': 'black';
     let baseTheme = EditorView.theme({
         "&": {
-          fontSize: '20pt',
-          color: "white",
+          fontSize: '12pt',
+          color: fontColor,
           backgroundColor: "transparent",
-          height: '80vh',
+          height: 'calc(100vh - 30.5px)'
         },
         ".cm-editor, .cm-editor:focused": {
           outline: "0 !important"
