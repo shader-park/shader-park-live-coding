@@ -1,7 +1,7 @@
 import { Scene, PerspectiveCamera, WebGLRenderer, Color, TorusKnotGeometry, SphereGeometry, FontLoader, TextBufferGeometry } from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { createSculptureWithGeometry, sculptToThreeJSMaterial } from 'shader-park-core';
-import { spCode } from './src/spCode.js';
+import { spCode, getFeatureString } from './src/spCode.js';
 import { initUIInteractions } from './src/ui.js';
 import {createEditor} from './src/editor.js';
 import {Pane} from 'tweakpane';
@@ -116,14 +116,9 @@ let gyScale = fxrand()*20+5;
 let noiseScale = fxrand()*200+5;
 let phase = fxrand();
 
-function getFeatureString(val, max) {
-  if (val / max < 0.3333) return "Low"
-  if (val / max <= 0.6666) return "Medium"
-  else return "High"
+if(window.$fxhashFeatures['Noise Enabled']) {
+  window.$fxhashFeatures['Noise Scale'] = getFeatureString(noiseScale, 205);
 }
-
-
-window.$fxhashFeatures['Noise Scale'] = getFeatureString(noiseScale, 205);
 window.$fxhashFeatures['Gyroid Scale'] = getFeatureString(gyScale, 25);
 window.$fxhashFeatures['Color Phase'] = getFeatureString(phase, 1.0);
 

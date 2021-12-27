@@ -2,6 +2,11 @@
 // the scope is limited to this function only.
 
 // To pass external data use the 'input' function. See other examples.
+export function getFeatureString(val, max) {
+  if (val / max < 0.3333) return "Low"
+  if (val / max <= 0.6666) return "Medium"
+  else return "High"
+}
 
 export function spCode()  {
   let features = {};
@@ -80,7 +85,11 @@ sphereSegments(5, .8);
       return `intersect();`
     } else if(prob < .4) {
       features['CSG Mode'] = 'Mix';
-      return `mixGeo(.3);`
+      let mixProb = fxrand();
+      features['Mix Amount'] = getFeatureString(mixProb, 1.0);
+      let mixAmt = mixProb * .4 + .3;
+      features['CSG Mode'] = 'Mix';
+      return `mixGeo(${mixAmt});`
     } else {
       features['CSG Intersect'] = 'Difference';
       return `difference();`
@@ -133,15 +142,7 @@ occlusion(-4);`
     }
   }
   
-  function getFeatureString(value) {
-    if (value < 0.5) return "low"
-    if (value < 0.9) return "medium"
-    else return "high"
-  }
-  
   window.$fxhashFeatures = features
-
-
 
   let mode = opMode();
   let sdfNoiseScale = .01;
