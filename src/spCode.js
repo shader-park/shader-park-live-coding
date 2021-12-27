@@ -39,7 +39,7 @@ export function spCode()  {
 
   let shape = () => {
     let prob = fxrand();
-    if(prob < .99) {
+    if(prob < .1) {
       features['Shape'] = 'Grid Lines';
       return `let spacer = .045;
 let reps = 3;
@@ -47,7 +47,7 @@ layoutGrid(reps, spacer, shape((i) => {
   line(vec3(0, 0, -.5), vec3(.0, .0, .4), .03);
 }));
 ${layoutGrid}`;
-    } else if (prob < .1) {
+    } else if (prob < .15) {
       features['Shape'] = 'Grid Spheres';
       return `let spacer = .03;
 let reps = 4;

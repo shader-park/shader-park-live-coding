@@ -33,10 +33,13 @@ let startCode = spCode();
 
 let scene = new Scene();
 let params = { time: 0, goWild: 0.0, currGoWild: 0.0 };
-document.querySelector('.wild').addEventListener('click', () => {
+let wild= document.querySelector('.wild')
+wild.addEventListener('click', () => {
   if(params.currGoWild == 1.0) {
     params.currGoWild = 0.0;
+    wild.innerHTML = 'Go Wild';
   } else {
+    wild.innerHTML = 'Stop Wild';
     params.currGoWild = 1.0;
   }
 }, false);
@@ -206,7 +209,7 @@ window.addEventListener( 'resize', onWindowResize );
 let render = () => {
   requestAnimationFrame( render );
   params.time += 0.01;
-  params.goWild = .9*params.goWild + .1 * params.currGoWild;
+  params.goWild = .99*params.goWild + .01 * params.currGoWild;
   controls.update();
   // renderer.render( scene, camera );
   composer.render();
