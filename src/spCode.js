@@ -25,23 +25,31 @@ export function spCode()  {
     }
   };
 
+  let layoutGrid = `function layoutGrid(reps, spacerSize, draw) {
+    for(let i = 0; i < reps; i++) {
+      repeat(vec3(spacerSize * i, spacerSize * i , spacerSize * i) , vec3(reps, reps, reps));
+      draw(i / reps);
+    }
+  };`
+
   let shape = () => {
     let prob = fxrand();
-    if(prob < .1) {
-      features['Shape'] = 'Grid';
-      return `let spacer = .06;
+    if(prob < .99) {
+      features['Shape'] = 'Grid Lines';
+      return `let spacer = .045;
 let reps = 3;
 layoutGrid(reps, spacer, shape((i) => {
-  // rotateY(time);
-  line(vec3(0, 0, -.5), vec3(.0, .0, .5), .03);
+  line(vec3(0, 0, -.5), vec3(.0, .0, .4), .03);
 }));
-function layoutGrid(reps, spacerSize, draw) {
-  for(let i = 0; i < reps; i++) {
-    repeat(vec3(spacerSize * i, spacerSize * i , spacerSize * i) , vec3(reps, reps, reps));
-    draw(i / reps);
-  }
-};`
-
+${layoutGrid}`;
+    } else if (prob < .1) {
+      features['Shape'] = 'Grid Spheres';
+      return `let spacer = .03;
+let reps = 4;
+layoutGrid(reps, spacer, shape((i) => {
+  sphere(.01);
+}));
+${layoutGrid}`;
     } else if(prob < .2) {
       features['Shape'] = 'Torus';
       return `rotateX(PI/2);
@@ -65,9 +73,22 @@ sphereSegments(5, .8);
     }
   }
 
+  let opMode = () => {
+    let prob = fxrand();
+    if(prob < .1) {
+      features['CSG Intersect'] = 'Intersect';
+      return `intersect();`
+    } else if(prob < .4) {
+      features['CSG Mode'] = 'Mix';
+      return `mixGeo(.3);`
+    } else {
+      features['CSG Intersect'] = 'Difference';
+      return `difference();`
+    } 
+  }
+
   let maxIterations = () => {
     let prob = fxrand();
-    console.log(prob)
     if(prob < .1) {
       features['Raymarching Iterations'] = 'Low';
       features['Dark Mode'] = true;
@@ -122,11 +143,18 @@ occlusion(-4);`
 
 
 
-
-  return `function gyroid(scale) {
+  let mode = opMode();
+  let sdfNoiseScale = .01;
+  if(features['CSG Mode'] == 'Mix') {
+    sdfNoiseScale = .001;
+  }
+  return `let goWild = input();
+function gyroid(scale) {
   let s = getSpace();
   s = s* scale;
-  return dot(sin(s+time), cos(vec3(s.z, s.x, s.y) + time))/ scale ;
+  let v = mix(sin(s+time), tan(s+nsin(time)*.2), goWild);
+  return dot(v, cos(vec3(s.z, s.x, s.y) + time))/ scale ;
+  // return dot(sin(s+time), cos(vec3(s.z, s.x, s.y) + time))/ scale ;
 }
 ${maxIterations()}
 setStepSize(.4);
@@ -145,6 +173,6 @@ let phase = input(.5, 0, 10);
 ${color()}
 
 ${shape()}
-intersect();
-setSDF(gy + n * .01);`;
+${mode}
+setSDF(gy + n * ${sdfNoiseScale});`;
 };
