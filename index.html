@@ -6,7 +6,102 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- import the webpage's stylesheet -->
-    <link rel="stylesheet" href="/style.css" inline="inline">
+    <script id="fxhash-snippet">
+      //---- do not edit the following code (you can indent as you wish)
+      let alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"
+      var fxhash = "oo" + Array(49).fill(0).map(_=>alphabet[(Math.random()*alphabet.length)|0]).join('')
+      let b58dec = (str) => str.split('').reduce((p,c,i) => p + alphabet.indexOf(c) * (Math.pow(alphabet.length, str.length-i-1)), 0)
+      let fxhashTrunc = fxhash.slice(2)
+      let regex = new RegExp(".{" + ((fxhashTrunc.length/4)|0) + "}", 'g')
+      let hashes = fxhashTrunc.match(regex).map(h => b58dec(h))
+      let sfc32 = (a, b, c, d) => {
+        return () => {
+          a |= 0; b |= 0; c |= 0; d |= 0
+          var t = (a + b | 0) + d | 0
+          d = d + 1 | 0
+          a = b ^ b >>> 9
+          b = c + (c << 3) | 0
+          c = c << 21 | c >>> 11
+          c = c + t | 0
+          return (t >>> 0) / 4294967296
+        }
+      }
+      var fxrand = sfc32(...hashes)
+      //---- /do not edit the following code
+    </script>
+    <!-- <link rel="stylesheet" href="/style.css" inline="inline"> -->
+    <style>
+      body {
+        font-family: helvetica, arial, sans-serif;
+        margin: 2em;
+        width: 100vw; 
+        height: 100vh; 
+        margin : 0px; 
+        padding : 0px; 
+        border : 0px; 
+        background-color : black;
+      }
+
+      .code-container {
+        position: fixed;
+        left: 0px;
+        top: 30px;
+        width: 50vw;
+        height: 100vh;
+      }
+
+      @media only screen and (max-width: 800px) {
+        .code-container {
+          width: 100vw;
+        }
+      }
+      
+      canvas {
+        width: 100%;
+        height: 100%;
+        margin : 0px;
+        padding : 0px;
+        border : 0px;
+        z-index: -1;
+        background-color : transparent;
+      }
+
+      .editor-action-buttons {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+      }
+
+      .logo {
+        position: fixed;
+        right: 15px;
+        bottom: 10px;
+        margin: 0px;
+        padding: 0px;
+        color: white;
+        font-family: Helvetica, Arial, sans-serif;
+        font-weight: 700;
+      }
+
+      .editor-button {
+        padding: 5px 15px 5px 15px;
+        border-radius: 50px;
+        /* border: 1px solid lightgrey; */
+        /* box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.15); */
+        margin-top: 2.5px;
+        transition: all 300ms ease-in-out ;
+        color: rgb(165, 165, 165);
+        border-color: rgb(165, 165, 165);
+        background-color: transparent;
+        -webkit-transition: all 300ms ease-in-out;
+        cursor: pointer;
+      }
+      .editor-button:hover {
+          color: white;
+          border-color: white;
+          /* box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2); */
+      }
+    </style>
   </head>  
   <body>
     <div class="editor-action-buttons">
@@ -14,7 +109,7 @@
       <button class="permalink editor-button">Permalink</button>
     </div>
     <div class="code-container"></div>
-    <script src="./index.js" type="module" inline="inline"></script>
+    <script src="/index.js" type="module"></script>
     <a href="https://www.shaderpark.com" target="_blank"><h1 class="logo">SHADER PARK</h1></a>
   </body>
 </html>

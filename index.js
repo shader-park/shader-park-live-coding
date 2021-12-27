@@ -36,8 +36,9 @@ renderer.setClearColor( new Color(1, 1, 1), 0 );
 document.body.appendChild( renderer.domElement );
 
 let geometry  = new SphereGeometry(2, 45, 45);
-const urlSearchParams = new URLSearchParams(window.location.search);
-const qParams = Object.fromEntries(urlSearchParams.entries());
+// const urlSearchParams = new URLSearchParams(window.location.search);
+// const qParams = Object.fromEntries(urlSearchParams.entries());
+const qParams = {};
 if ('torus' in qParams) {
   geometry = new TorusKnotGeometry( 2, .3, 100, 40);
   geometry.computeBoundingSphere();
@@ -53,10 +54,29 @@ if('scale' in qParams) {
 }
 
 state.code = startCode;
+
+let gyScale = fxrand()*20+5;
+let noiseScale = fxrand()*200+5;
+let phase = fxrand();
+
+function getFeatureString(val, max) {
+  if (val / max < 0.3333) return "Low"
+  if (val / max <= 0.6666) return "Medium"
+  else return "High"
+}
+
+
+window.$fxhashFeatures['Noise Scale'] = getFeatureString(noiseScale, 205);
+window.$fxhashFeatures['Gyroid Scale'] = getFeatureString(gyScale, 25);
+window.$fxhashFeatures['Color Phase'] = getFeatureString(phase, 1.0);
+
 // Shader Park Setup
 let mesh = createSculptureWithGeometry(geometry, startCode, () => ( {
     time: params.time,
-    _scale: scale
+    _scale: scale,
+    gyScale: gyScale,
+    noiseScale,
+    phase
 } ));
 
 
@@ -88,9 +108,10 @@ let controls = new OrbitControls( camera, renderer.domElement, {
   zoomSpeed : 0.5,
   rotateSpeed : 0.5
 } );
-camera.position.z = 2;
+camera.position.z = 1.5;
 
 window.controls = controls;
+// controls.autoRotate = true
 
 const uniformsToExclude = { 'sculptureCenter': 0, 'msdf': 0, 'opacity': 0, 'time': 0, 'stepSize': 0, '_scale' : 1, 'resolution': 0};;
 
