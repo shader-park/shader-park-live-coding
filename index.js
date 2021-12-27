@@ -6,6 +6,18 @@ import { initUIInteractions } from './src/ui.js';
 import {createEditor} from './src/editor.js';
 import {Pane} from 'tweakpane';
 
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { AfterimagePass } from 'three/examples/jsm/postprocessing/AfterimagePass.js';
+import { LuminosityShader } from 'three/examples/jsm/shaders/LuminosityShader.js';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+
+import { SobelOperatorShader } from 'three/examples/jsm/shaders/SobelOperatorShader.js';
+
+import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js';
+
+
+
 
 // import {font} from './src/helvetiker_regular1.typeface.json';
 
@@ -24,6 +36,7 @@ let params = { time: 0 };
 let camera = new PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
 camera.position.z = 4;
 
+
 let renderer = new WebGLRenderer({ antialias: true, transparent: true });
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setPixelRatio( window.devicePixelRatio );
@@ -36,6 +49,42 @@ if(window.$fxhashFeatures['Dark Mode']) {
 }
 renderer.setClearColor( clearCol, 1 );
 document.body.appendChild( renderer.domElement );
+
+///////Post Processing
+
+let composer = new EffectComposer( renderer );
+composer.addPass( new RenderPass( scene, camera ) );
+
+
+
+let afterimagePass = new AfterimagePass();
+afterimagePass.uniforms[ "damp" ].value = .9
+//afterimagePass.setSize(window.innerWidth-100, window.innerHeight-100);
+// composer.addPass( afterimagePass );
+
+// let fxaaPass = new ShaderPass( FXAAShader );
+// composer.addPass( fxaaPass );
+
+const pass = new SMAAPass( window.innerWidth * renderer.getPixelRatio(), window.innerHeight * renderer.getPixelRatio() );
+composer.addPass( pass );
+
+// let taaRenderPass = new TAARenderPass( scene, camera );
+// taaRenderPass.unbiased = false;
+// composer.addPass( taaRenderPass );
+
+let edgeRand = fxrand();
+if(edgeRand < .05) {
+  window.$fxhashFeatures['Dark Mode'] = true;
+  window.$fxhashFeatures['Edge'] = true;
+  window.$fxhashFeatures['Black & White'] = true;
+  let effectGrayScale = new ShaderPass( LuminosityShader );
+  composer.addPass( effectGrayScale );
+
+  let effectSobel = new ShaderPass( SobelOperatorShader );
+  effectSobel.uniforms[ 'resolution' ].value.x = window.innerWidth * window.devicePixelRatio;
+  effectSobel.uniforms[ 'resolution' ].value.y = window.innerHeight * window.devicePixelRatio;
+  composer.addPass( effectSobel );
+}
 
 let geometry  = new SphereGeometry(2, 45, 45);
 // const urlSearchParams = new URLSearchParams(window.location.search);
@@ -147,6 +196,7 @@ let onWindowResize = () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize( window.innerWidth, window.innerHeight );
+  composer.setSize( window.innerWidth, window.innerHeight );
 }
 
 window.addEventListener( 'resize', onWindowResize );
@@ -155,7 +205,8 @@ let render = () => {
   requestAnimationFrame( render );
   params.time += 0.01;
   controls.update();
-  renderer.render( scene, camera );
+  // renderer.render( scene, camera );
+  composer.render();
 };
 
 render();
