@@ -31,7 +31,7 @@ export function createEditor(startCode, codeChangeCallback) {
           borderLeftColor: "#0e9"
         },
         "&.cm-focused .cm-selectionBackground, ::selection": {
-          backgroundColor: "#074",
+          backgroundColor: "#3d85c6",
         },
         ".cm-gutters": {
           backgroundColor: "transparent",
