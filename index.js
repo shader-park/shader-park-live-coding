@@ -1,5 +1,7 @@
 import { Scene, PerspectiveCamera, WebGLRenderer, Color, TorusKnotGeometry, SphereGeometry, FontLoader, TextBufferGeometry } from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
+
 import { createSculptureWithGeometry, sculptToThreeJSMaterial } from 'shader-park-core';
 import { spCode, getFeatureString } from './src/spCode.js';
 import { initUIInteractions } from './src/ui.js';
@@ -60,6 +62,10 @@ if(window.$fxhashFeatures['Dark Mode']) {
   document.querySelector('.wild').classList.add('light-mode')
   document.querySelector('.show-hide-editor').classList.add('light-mode')
 }
+setTimeout(() => {
+  document.querySelector('.show-hide-editor').click();
+}, 1000);
+document.querySelector('.show-hide-editor').click();
 renderer.setClearColor( clearCol, 1 );
 document.body.appendChild( renderer.domElement );
 
@@ -160,12 +166,21 @@ if( 'text' in qParams) {
   });
 }
 
-let controls = new OrbitControls( camera, renderer.domElement, {
-  enableDamping : true,
-  dampingFactor : 0.25,
-  zoomSpeed : 0.5,
-  rotateSpeed : 0.5
-} );
+let controls = new TrackballControls( camera, renderer.domElement );
+
+controls.rotateSpeed = 1.2;
+controls.zoomSpeed = 1.2;
+// controls.panSpeed = 0.8;
+// controls.noZoom = true;
+controls.maxDistance = 2.31
+controls.dynamicDampingFactor =.05;
+
+// let controls = new OrbitControls( camera, renderer.domElement, {
+//   enableDamping : true,
+//   dampingFactor : 0.25,
+//   zoomSpeed : 0.5,
+//   rotateSpeed : 0.5
+// } );
 camera.position.z = 1.5;
 
 window.controls = controls;

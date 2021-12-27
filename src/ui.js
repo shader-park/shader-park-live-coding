@@ -53,5 +53,6 @@ const showHideButtonInteraction = () => {
 
 export const initUIInteractions = (state) => {
     showHideButtonInteraction();
+    
     // createPermaLink(state);
 }
