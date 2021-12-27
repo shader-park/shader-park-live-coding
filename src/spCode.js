@@ -20,8 +20,11 @@ export function spCode()  {
   }
 
   let mirror = () => {
-    if(fxrand() > .4) {
-      
+    let prob = fxrand();
+    if(features['Shape'] == 'Inside Torus') {
+      prob = .2;
+    }
+    if(prob > .4) {
       features['Mirror'] = true;
       return `mirrorXYZ();`
     } else {
@@ -39,7 +42,11 @@ export function spCode()  {
 
   let shape = () => {
     let prob = fxrand();
-    // prob = .14
+    if(features['Shape'] == 'Inside Torus') {
+      features['Dark Mode'] = true;
+      return '';
+    }
+
     if(prob < .1) {
       if(features['Noise Enabled']) {
         return shape();
@@ -87,7 +94,11 @@ sphereSegments(5, .8);
 
   let opMode = () => {
     let prob = fxrand();
-    if(prob < .1) {
+    if(prob < .9) {
+      features['Shape'] = 'Inside Torus';
+      features['CSG Intersect'] = 'Difference';
+      return '';
+    } else if(prob < .1) {
       features['CSG Intersect'] = 'Intersect';
       return `intersect();`
     } else if(prob < .4) {
@@ -117,7 +128,6 @@ sphereSegments(5, .8);
 
   let noise = () => {
     let prob = fxrand();
-    console.log(prob)
     if(prob < .5) {
       features['Noise Enabled'] = false;
       return `let n = .01;`
@@ -129,7 +139,11 @@ sphereSegments(5, .8);
 
   let color = ()=> {
     let prob = fxrand();
-    if(prob < .5) {
+    if(features['Shape'] == 'Inside Torus') {
+      prob = .2;
+    }
+
+    if(prob < .4) {
       features['Color'] = 'Black & White';
       let occlusionAmt = -100;
       if(features['Noise Enabled']) {
@@ -147,6 +161,14 @@ occlusion(${occlusionAmt})`;
 color(cosPallette(length(getSpace()), vec3(.5), vec3(.5), vec3(.5, 0, 1), vec3(phase)) + glo * .3);
 occlusion(-4);`
     }
+  }
+
+  let after = () => {
+    if(features['Shape'] == 'Inside Torus') {
+      return `difference();
+torus(2.0, 2.0);`;
+    }
+    return '';
   }
   
   window.$fxhashFeatures = features
@@ -178,9 +200,7 @@ let col = gy * n * 0.1;
 metal(abs(n) * 2);
 shine(.2);
 let phase = input(.5, 0, 10);
-${color()}
-
-${shape()}
-${mode}
-setSDF(gy + n * ${sdfNoiseScale});`;
+${color()}${shape()}${mode}
+setSDF(gy + n * ${sdfNoiseScale});
+${after()}`;
 };
