@@ -3,6 +3,8 @@ dist.zip
 
 .DS_Store
 
+captures/
+
 # Logs
 logs
 *.log
