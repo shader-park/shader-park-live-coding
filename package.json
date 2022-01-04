@@ -9,7 +9,9 @@
   "private": false,
   "scripts": {
     "start": "parcel index.html --open",
-    "build": "parcel build --no-source-maps index.html"
+    "build": "parcel build --no-source-maps index.html",
+    "analyze": "parcel build src/index.html --reporter @parcel/reporter-bundle-analyzer",
+    "cap": "node ./screen_shots/capture.js"
   },
   "staticFiles": {
     "staticPath": "fonts",
@@ -20,14 +22,16 @@
     "@codemirror/commands": "^0.19.5",
     "@codemirror/lang-javascript": "^0.19.2",
     "@codemirror/next": "^0.16.0",
-    "parcel-plugin-inline-source": "^1.0.0",
     "shader-park-core": "^0.0.270",
     "three": "^0.129.0",
-    "tweakpane": "^3.0.5"
+    "tweakpane": "^3.0.7"
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",
     "parcel-bundler": "^1.12.5",
-    "parcel-plugin-static-files-copy": "^2.6.0"
+    "parcel-plugin-bundle-visualiser": "^1.2.0",
+    "parcel-plugin-inline-source": "^1.0.0",
+    "parcel-plugin-static-files-copy": "^2.6.0",
+    "puppeteer": "^13.0.1"
   }
 }
