@@ -16,7 +16,7 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 
 import { SobelOperatorShader } from 'three/examples/jsm/shaders/SobelOperatorShader.js';
 
-import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js';
+// import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js';
 
 
 
@@ -62,9 +62,11 @@ if(window.$fxhashFeatures['Editor Dark Mode']) {
   document.querySelector('.wild').classList.add('light-mode')
   document.querySelector('.show-hide-editor').classList.add('light-mode')
 }
+document.querySelectorAll('.editor-button').forEach( el => el.style.visibility = 'hidden')
 setTimeout(() => {
   document.querySelector('.show-hide-editor').click();
-}, 1000);
+  document.querySelectorAll('.editor-button').forEach( el => el.style.visibility = 'visible')
+}, 2000);
 document.querySelector('.show-hide-editor').click();
 renderer.setClearColor( clearCol, 1 );
 document.body.appendChild( renderer.domElement );
@@ -81,8 +83,8 @@ afterimagePass.uniforms[ "damp" ].value = .9
 // let fxaaPass = new ShaderPass( FXAAShader );
 // composer.addPass( fxaaPass );
 
-const pass = new SMAAPass( window.innerWidth * renderer.getPixelRatio(), window.innerHeight * renderer.getPixelRatio() );
-composer.addPass( pass );
+// const pass = new SMAAPass( window.innerWidth * renderer.getPixelRatio(), window.innerHeight * renderer.getPixelRatio() );
+// composer.addPass( pass );
 
 // let taaRenderPass = new TAARenderPass( scene, camera );
 // taaRenderPass.unbiased = false;
