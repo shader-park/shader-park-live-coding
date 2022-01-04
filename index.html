@@ -10,6 +10,12 @@
       //---- do not edit the following code (you can indent as you wish)
       let alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ"
       var fxhash = "oo" + Array(49).fill(0).map(_=>alphabet[(Math.random()*alphabet.length)|0]).join('')
+      let searchParams = (new URL(document.location)).searchParams;
+      if(searchParams.has("hash")) {
+        console.log('found hash', )
+        fxhash = searchParams.get("hash");
+        console.log('found hash', searchParams.get("hash"))
+      }
       let b58dec = str=>[...str].reduce((p,c)=>p*alphabet.length+alphabet.indexOf(c)|0, 0)
       let fxhashTrunc = fxhash.slice(2)
       let regex = new RegExp(".{" + ((fxhashTrunc.length/4)|0) + "}", 'g')
@@ -26,6 +32,7 @@
           return (t >>> 0) / 4294967296
         }
       }
+
       var fxrand = sfc32(...hashes)
       // call this method to trigger the preview
       function fxpreview() {
@@ -119,7 +126,7 @@
     <div class="editor-action-buttons">
       <button class="show-hide-editor editor-button">Hide Code</button>
       <button class="wild editor-button">Go Wild</button>
-      <span>Press H to Show & Hide Code</span>
+      <!-- <span>Press H to Show & Hide Code</span> -->
       <!-- <button class="permalink editor-button">Permalink</button> -->
     </div>
     <div class="code-container"></div>
