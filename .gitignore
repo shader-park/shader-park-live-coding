@@ -1,6 +1,8 @@
 dist/
 dist.zip
 
+/screen_shots/cap2/*
+
 .DS_Store
 
 captures/

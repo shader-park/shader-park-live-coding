@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",
+    "fs": "^0.0.1-security",
     "parcel-bundler": "^1.12.5",
     "parcel-plugin-bundle-visualiser": "^1.2.0",
     "parcel-plugin-inline-source": "^1.0.0",
