@@ -1,20 +1,21 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Color, TorusKnotGeometry, SphereGeometry, FontLoader, TextBufferGeometry } from 'three';
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
+// import { Scene, PerspectiveCamera, WebGLRenderer, Color, TorusKnotGeometry, SphereGeometry, FontLoader, TextBufferGeometry } from 'three';
 
-import { createSculptureWithGeometry, sculptToThreeJSMaterial } from 'shader-park-core';
+// import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+// import { TrackballControls } from "three/examples/jsm/controls/TrackballControls";
+
+import { createSculptureWithGeometry, sculptToThreeJSMaterial } from './shader-park-core.esm.js';
 import { spCode, getFeatureString } from './src/spCode.js';
 import { initUIInteractions } from './src/ui.js';
 import {createEditor} from './src/editor.js';
 import {Pane} from 'tweakpane';
 
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { AfterimagePass } from 'three/examples/jsm/postprocessing/AfterimagePass.js';
-import { LuminosityShader } from 'three/examples/jsm/shaders/LuminosityShader.js';
-import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
+// import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+// import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+// import { AfterimagePass } from 'three/examples/jsm/postprocessing/AfterimagePass.js';
+// import { LuminosityShader } from 'three/examples/jsm/shaders/LuminosityShader.js';
+// import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 
-import { SobelOperatorShader } from 'three/examples/jsm/shaders/SobelOperatorShader.js';
+// import { SobelOperatorShader } from 'three/examples/jsm/shaders/SobelOperatorShader.js';
 
 // import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js';
 
@@ -33,7 +34,7 @@ initUIInteractions(state);
 
 let startCode = spCode();
 
-let scene = new Scene();
+let scene = new THREE.Scene();
 let params = { time: 0, goWild: 0.0, currGoWild: 0.0 };
 let wild= document.querySelector('.wild')
 wild.addEventListener('click', () => {
@@ -46,17 +47,17 @@ wild.addEventListener('click', () => {
   }
 }, false);
 
-let camera = new PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+let camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
 camera.position.z = 4;
 
 
-let renderer = new WebGLRenderer({ antialias: true, transparent: true });
+let renderer = new THREE.WebGLRenderer({ antialias: true, transparent: true });
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setPixelRatio( window.devicePixelRatio );
 
-let clearCol = new Color(1, 1, 1);
+let clearCol = new THREE.Color(1, 1, 1);
 if(window.$fxhashFeatures['Editor Dark Mode']) {
-  clearCol = new Color(0, 0, 0);
+  clearCol = new THREE.Color(0, 0, 0);
 } else {
   document.querySelector('.logo').style.color = 'black';
   document.querySelector('.wild').classList.add('light-mode')
@@ -73,10 +74,11 @@ document.body.appendChild( renderer.domElement );
 
 ///////Post Processing
 
-let composer = new EffectComposer( renderer );
-composer.addPass( new RenderPass( scene, camera ) );
-let afterimagePass = new AfterimagePass();
-afterimagePass.uniforms[ "damp" ].value = .9
+// let composer = new EffectComposer( renderer );
+// composer.addPass( new RenderPass( scene, camera ) );
+// let afterimagePass = new AfterimagePass();
+// afterimagePass.uniforms[ "damp" ].value = .9
+
 //afterimagePass.setSize(window.innerWidth-100, window.innerHeight-100);
 // composer.addPass( afterimagePass );
 
@@ -90,27 +92,27 @@ afterimagePass.uniforms[ "damp" ].value = .9
 // taaRenderPass.unbiased = false;
 // composer.addPass( taaRenderPass );
 
-let edgeRand = fxrand();
-if(edgeRand < .05) {
-  window.$fxhashFeatures['Editor Dark Mode'] = true;
-  window.$fxhashFeatures['Edge'] = true;
-  window.$fxhashFeatures['Black & White'] = true;
-  let effectGrayScale = new ShaderPass( LuminosityShader );
-  composer.addPass( effectGrayScale );
+// let edgeRand = fxrand();
+// if(edgeRand < .05) {
+//   window.$fxhashFeatures['Editor Dark Mode'] = true;
+//   window.$fxhashFeatures['Edge'] = true;
+//   window.$fxhashFeatures['Black & White'] = true;
+//   let effectGrayScale = new ShaderPass( LuminosityShader );
+//   composer.addPass( effectGrayScale );
 
-  let effectSobel = new ShaderPass( SobelOperatorShader );
-  effectSobel.uniforms[ 'resolution' ].value.x = window.innerWidth * window.devicePixelRatio;
-  effectSobel.uniforms[ 'resolution' ].value.y = window.innerHeight * window.devicePixelRatio;
-  composer.addPass( effectSobel );
-}
+//   let effectSobel = new ShaderPass( SobelOperatorShader );
+//   effectSobel.uniforms[ 'resolution' ].value.x = window.innerWidth * window.devicePixelRatio;
+//   effectSobel.uniforms[ 'resolution' ].value.y = window.innerHeight * window.devicePixelRatio;
+//   composer.addPass( effectSobel );
+// }
 
 
-let geometry  = new SphereGeometry(2, 45, 45);
+let geometry  = new THREE.SphereGeometry(2, 45, 45);
 // const urlSearchParams = new URLSearchParams(window.location.search);
 // const qParams = Object.fromEntries(urlSearchParams.entries());
 const qParams = {};
 if ('torus' in qParams) {
-  geometry = new TorusKnotGeometry( 2, .3, 100, 40);
+  geometry = new THREE.TorusKnotGeometry( 2, .3, 100, 40);
   geometry.computeBoundingSphere();
   geometry.center();
 }
@@ -156,10 +158,10 @@ let mesh = createSculptureWithGeometry(geometry, startCode, () => ( {
 scene.add(mesh);
 
 if( 'text' in qParams) {
-  const loader = new FontLoader();
+  const loader = new THREE.FontLoader();
 
   loader.load( './helvetiker_regular1.typeface.json', function ( font ) {
-    mesh.geometry = new TextBufferGeometry( qParams['text'], {
+    mesh.geometry = new THREE.TextBufferGeometry( qParams['text'], {
       font: font,
       size: 2,
       height: .1,
@@ -175,14 +177,12 @@ if( 'text' in qParams) {
   });
 }
 
-let controls = new TrackballControls( camera, renderer.domElement );
+// let controls = new TrackballControls( camera, renderer.domElement );
 
-controls.rotateSpeed = 1.2;
-controls.zoomSpeed = 1.2;
-// controls.panSpeed = 0.8;
-// controls.noZoom = true;
-controls.maxDistance = 2.31
-controls.dynamicDampingFactor =.05;
+// controls.rotateSpeed = 1.2;
+// controls.zoomSpeed = 1.2;
+// controls.maxDistance = 2.31
+// controls.dynamicDampingFactor =.05;
 
 // let controls = new OrbitControls( camera, renderer.domElement, {
 //   enableDamping : true,
@@ -192,7 +192,7 @@ controls.dynamicDampingFactor =.05;
 // } );
 camera.position.z = 1.5;
 
-window.controls = controls;
+// window.controls = controls;
 // controls.autoRotate = true
 
 const uniformsToExclude = { 'sculptureCenter': 0, 'msdf': 0, 'opacity': 0, 'time': 0, 'stepSize': 0, '_scale' : 1, 'resolution': 0};;
@@ -227,7 +227,7 @@ let onWindowResize = () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize( window.innerWidth, window.innerHeight );
-  composer.setSize( window.innerWidth, window.innerHeight );
+  // composer.setSize( window.innerWidth, window.innerHeight );
 }
 
 window.addEventListener( 'resize', onWindowResize );
@@ -236,9 +236,9 @@ let render = () => {
   requestAnimationFrame( render );
   params.time += 0.01;
   params.goWild = .99*params.goWild + .01 * params.currGoWild;
-  controls.update();
-  // renderer.render( scene, camera );
-  composer.render();
+  // controls.update();
+  renderer.render( scene, camera );
+  // composer.render();
 };
 
 render();

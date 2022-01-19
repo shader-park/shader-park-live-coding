@@ -34,9 +34,9 @@ export function spCode()  {
   };
 
   let layoutGrid = `function layoutGrid(reps, spacerSize, draw) {
-  for(let i = 0; i < reps; i++) {
-    repeat(vec3(spacerSize * i, spacerSize * i , spacerSize * i) , vec3(reps, reps, reps));
-    draw(i / reps);
+  for (let i = 0; i < reps; i++) {
+    repeat(vec3(mult(spacerSize, i), mult(spacerSize, i), mult(spacerSize, i)), vec3(reps, reps, reps));
+    draw(divide(i, reps));
   }
 };`
 
@@ -71,16 +71,16 @@ layoutGrid(reps, spacer, shape((i) => {
 ${layoutGrid}`;
     } else if(prob < .2) {
       features['Shape'] = 'Torus';
-      return `rotateX(PI/2);
-torus(vec2(.5 + n * .001));`
+      return `rotateX(divide(PI, 2));
+      torus(vec2(add(0.5, mult(n, 0.001))));`
     } else if(prob < .4) {
       features['Shape'] = 'Sphere';
-      return `sphere(.9 + n * .001);`
+      return `sphere(add(0.9, mult(n, 0.001)));`
     } else if (prob < .5) {
       features['Shape'] = 'Sphere Segments';
       return `let sphereSegments = shape((maxIter, maxSize) => {
   for(let i = 1.0; i <= maxIter; i++) {
-    sphere(pow(maxSize / i, .35));
+    sphere(pow(divide(maxSize, i), 0.35));
     shell(.01);
   }
 });
@@ -88,7 +88,7 @@ sphereSegments(5, .8);
 `;
     } else {
       features['Shape'] = 'Box';
-      return `box(vec3(.64 + n * .001));`
+      return `box(vec3(add(0.64, mult(n, 0.001))));`
     }
   }
 
@@ -133,7 +133,7 @@ sphereSegments(5, .8);
       return `let n = .01;`
     } else {
       features['Noise Enabled'] = true;
-      return `let n = noise(getRayDirection() * noiseScale+time ) * 10;`
+      return `let n = mult(noise(add(mult(getRayDirection(), noiseScale), time)), 10);`
     }
   }
 
@@ -149,17 +149,15 @@ sphereSegments(5, .8);
       if(features['Noise Enabled']) {
         occlusionAmt = -30;
       }
-      return `color(vec3(length(col)) + glo * .02);
+      return `color(add(vec3(length(col)), mult(glo, .02)));
 occlusion(${occlusionAmt})`;
       
     } else {
       features['Color'] = 'Depth';
       return `let cosPallette = (t, brightness, contrast, oscillation, phase) => {
-  return brightness + contrast * cos(PI * 2 * (oscillation * t + phase));
-}
-
-color(cosPallette(length(getSpace()), vec3(.5), vec3(.5), vec3(.5, 0, 1), vec3(phase)) + glo * .3);
-occlusion(-4);`
+    return add(brightness, mult(contrast, cos(mult(mult(PI, 2), add(mult(oscillation, t), phase)))));
+};
+color(add(cosPallette(length(getSpace()), vec3(0.5), vec3(0.5), vec3(0.5, 0, 1), vec3(phase)), mult(glo, 0.3)));`
     }
   }
 
@@ -178,30 +176,30 @@ torus(2.0, 2.0);`;
   if(features['CSG Mode'] == 'Mix') {
     sdfNoiseScale = .001;
   }
-  return `let goWild = input();
+  return `let goWild = input('goWild', 0.0, 0.0, 1.0);
 function gyroid(scale) {
   let s = getSpace();
-  s = s * scale;
-  let v = mix(sin(s + time), tan(s + nsin(time) * .2), goWild);
-  return dot(v, cos(vec3(s.z, s.x, s.y) + time)) / scale ;
+  s = mult(s, scale);
+  let v = mix(sin(add(s, time)), tan(add(s, mult(nsin(time), 0.2))), goWild);
+  return divide(dot(v, cos(add(vec3(s.z, s.x, s.y), time))), scale);
 }
 ${maxIterations()}
 setStepSize(.4);
-let noiseScale = input(20, 0, 200);
+let noiseScale = input('noiseScale', 20, 0, 200);
 lightDirection(getRayDirection());
 ${mirror()}
-let gyScale = input(10, 0, 200);
+let gyScale = input('gyScale', 10, 0, 200);
 let gy = gyroid(gyScale);
 
 ${noise()}
-let glo = max(1.0-1.0*dot(-1.0 * normal, getRayDirection()), 0.0);
-let col = gy * n * 0.1;
-metal(abs(n) * 2);
-shine(.2);
-let phase = input(.5, 0, 10);
+let glo = max(sub(1, mult(1, dot(mult(-1, normal), getRayDirection()))), 0);
+let col = mult(mult(gy, n), 0.1);
+metal(mult(abs(n), 2));
+shine(0.2);
+let phase = input('phase', 0.5, 0, 10);
 ${color()}
 ${shape()}
 ${mode}
-setSDF(gy + n * ${sdfNoiseScale});
+setSDF(add(gy, mult(n, ${sdfNoiseScale})));
 ${after()}`;
 };
