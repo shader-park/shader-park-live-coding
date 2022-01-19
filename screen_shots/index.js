@@ -1,4 +1,4 @@
-let response = await fetch("./filePaths1.json");
+let response = await fetch("./filePaths.json");
 let filePaths = await response.json();
 let container = document.querySelector('.container');
 
