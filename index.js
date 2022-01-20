@@ -28,6 +28,14 @@ import {Pane} from 'tweakpane';
 let state = {};
 
 // const pane = new Pane();
+const currMouse = new THREE.Vector3();
+const mouse = new THREE.Vector3();
+
+window.addEventListener( 'mousemove', (event) => {
+  currMouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	currMouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+}, false );
+
 
 initUIInteractions(state);
 
@@ -151,7 +159,8 @@ let mesh = createSculptureWithGeometry(geometry, startCode, () => ( {
     gyScale: gyScale,
     noiseScale,
     phase,
-    goWild: params.goWild
+    goWild: params.goWild,
+    mouse
 } ));
 
 
@@ -238,6 +247,7 @@ let render = () => {
   params.goWild = .99*params.goWild + .01 * params.currGoWild;
   // controls.update();
   renderer.render( scene, camera );
+  mouse.lerp(currMouse, .05);
   // composer.render();
 };
 

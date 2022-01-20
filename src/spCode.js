@@ -185,6 +185,8 @@ function gyroid(scale) {
 }
 ${maxIterations()}
 setStepSize(.4);
+rotateY(mult(-1, mouse.x));
+rotateX(mult(-1, mouse.y));
 let noiseScale = input('noiseScale', 20, 0, 200);
 lightDirection(getRayDirection());
 ${mirror()}
