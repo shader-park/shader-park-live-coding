@@ -28,14 +28,23 @@ import {Pane} from 'tweakpane';
 let state = {};
 
 // const pane = new Pane();
-const currMouse = new THREE.Vector3();
-const mouse = new THREE.Vector3();
+let currMouse = new THREE.Vector3();
+let mouse = new THREE.Vector3();
+let pointerDown = 0.0;
 
-window.addEventListener( 'mousemove', (event) => {
+
+window.addEventListener( 'pointermove', (event) => {
   currMouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 	currMouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 }, false );
 
+window.addEventListener( 'pointerdown', (event) => {
+  pointerDown = 1.0;
+}, false );
+
+window.addEventListener( 'pointerup', (event) => {
+  pointerDown = 0.0;
+}, false );
 
 initUIInteractions(state);
 
@@ -247,7 +256,7 @@ let render = () => {
   params.goWild = .99*params.goWild + .01 * params.currGoWild;
   // controls.update();
   renderer.render( scene, camera );
-  mouse.lerp(currMouse, .05);
+  mouse.lerp(currMouse, .05 );
   // composer.render();
 };
 
