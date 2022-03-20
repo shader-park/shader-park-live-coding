@@ -22,7 +22,7 @@
     "@codemirror/next": "^0.16.0",
     "parcel-plugin-inline-source": "^1.0.0",
     "shader-park-core": "^0.0.270",
-    "three": "^0.129.0",
+    "three": "^0.138.3",
     "tweakpane": "^3.0.5"
   },
   "devDependencies": {
