@@ -10,11 +10,27 @@
   </head>  
   <body>
     <div class="editor-action-buttons">
+      <div class="tab">
+        <button class="tablinks">Common</button>
+        <button class="tablinks">BufferA</button>
+        <button class="tablinks">BufferB</button>
+        <button class="tablinks">BufferC</button>
+        <button class="tablinks">BufferD</button>
+        <button class="tablinks active">Final Image</button>
+      </div>
+
       <button class="show-hide-editor editor-button">Hide Code</button>
       <button class="permalink editor-button">Permalink</button>
     </div>
-    <div class="code-container"></div>
+    <div class="code-container common hidden"></div>
+    <div class="code-container buffera hidden"></div>
+    <div class="code-container bufferb hidden"></div>
+    <div class="code-container bufferc hidden"></div>
+    <div class="code-container bufferd hidden"></div>
+    <div class="code-container final-image"></div>
+    
     <script src="./index.js" type="module" inline="inline"></script>
-    <a href="https://www.shaderpark.com" target="_blank"><h1 class="logo">SHADER PARK</h1></a>
+    <!-- <a href="https://www.shaderpark.com" target="_blank"><h1 class="logo">SHADER PARK</h1></a> -->
+    <a href="https://www.shaderpark.com" target="_blank"><h1 class="logo"> </h1></a>
   </body>
 </html>

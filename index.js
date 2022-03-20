@@ -1,10 +1,28 @@
 import { Scene, PerspectiveCamera, WebGLRenderer, Color, TorusKnotGeometry, SphereGeometry, FontLoader, TextBufferGeometry } from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { createSculptureWithGeometry, sculptToThreeJSMaterial } from 'shader-park-core';
-import { spCode } from './src/spCode.js';
+import { spCode, defaultPassCode } from './src/spCode.js';
 import { initUIInteractions } from './src/ui.js';
 import {createEditor} from './src/editor.js';
 import {Pane} from 'tweakpane';
+
+
+let tabs = document.querySelectorAll('.tablinks');
+let activeTab = document.querySelector('.active');
+let activeContainer = document.querySelector('.final-image');
+let getContainerClass = (tab) => '.'+tab.innerHTML.toLocaleLowerCase().replace(' ', '-');
+
+tabs.forEach(tab => {
+  console.log(getContainerClass(tab))
+  tab.addEventListener('click', () => {
+    activeTab.classList.remove('active');
+    tab.classList.add('active');
+    activeTab = tab;
+    activeContainer.classList.add('hidden');
+    activeContainer = document.querySelector(getContainerClass(tab))
+    activeContainer.classList.remove('hidden');
+  }, false);
+});
 
 
 // import {font} from './src/helvetiker_regular1.typeface.json';
@@ -115,10 +133,26 @@ let onCodeChange = (code) => {
 }
 
 /////Editor
-let editor = createEditor(startCode, onCodeChange);
-window.editor = editor;
-let codeContainer = document.querySelector('.code-container');
-codeContainer.appendChild(editor.dom);
+// let editor = createEditor(startCode, onCodeChange);
+// let codeContainer = document.querySelector('.final-image');
+// codeContainer.appendChild(editor.dom);
+
+let editors = {
+  '.common' : '',
+  '.buffera' : defaultPassCode(),
+  '.bufferb' : defaultPassCode(),
+  '.bufferc' : defaultPassCode(),
+  '.bufferd' : defaultPassCode(),
+  '.final-image': spCode(),
+}
+
+for (const [key, value] of Object.entries(editors)) {
+  
+  let container = document.querySelector(key);
+  console.log(key, value, container);
+  let editor = createEditor(value, onCodeChange);
+  container.appendChild(editor.dom);
+}
 
 let onWindowResize = () => {
   camera.aspect = window.innerWidth / window.innerHeight;
