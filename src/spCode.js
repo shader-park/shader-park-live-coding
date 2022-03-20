@@ -14,7 +14,7 @@ sphere(0.5 + n * nsin(time) * 3);`
 
 export function defaultPassCode() {
   return `
-    enable2D();
-    color(1, 1, 1);
+enable2D();
+color(1, 1, 1);
   `
 };
