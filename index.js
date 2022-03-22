@@ -1,6 +1,6 @@
 import { Scene, PerspectiveCamera, WebGLRenderer, Color, TorusKnotGeometry, SphereGeometry, FontLoader, TextBufferGeometry } from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { createSculptureWithGeometry, sculptToThreeJSMaterial } from 'shader-park-core';
+import { createSculptureWithGeometry, sculptToThreeJSMaterial, createMultiPassSculptureWithGeometry } from 'shader-park-core';
 import { spCode, defaultPassCode } from './src/spCode.js';
 import { initUIInteractions } from './src/ui.js';
 import {createEditor} from './src/editor.js';
@@ -13,7 +13,6 @@ let activeContainer = document.querySelector('.final-image');
 let getContainerClass = (tab) => '.'+tab.innerHTML.toLocaleLowerCase().replace(' ', '-');
 
 tabs.forEach(tab => {
-  console.log(getContainerClass(tab))
   tab.addEventListener('click', () => {
     activeTab.classList.remove('active');
     tab.classList.add('active');
@@ -50,6 +49,7 @@ let renderer = new WebGLRenderer({ antialias: true, transparent: true });
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.setPixelRatio( window.devicePixelRatio );
 
+
 renderer.setClearColor( new Color(1, 1, 1), 0 );
 document.body.appendChild( renderer.domElement );
 
@@ -72,7 +72,8 @@ if('scale' in qParams) {
 
 state.code = startCode;
 // Shader Park Setup
-let mesh = createSculptureWithGeometry(geometry, startCode, () => ( {
+
+let mesh = createMultiPassSculptureWithGeometry(geometry, {finalImage: startCode, bufferA: defaultPassCode()}, () => ( {
     time: params.time,
     _scale: scale
 } ));
@@ -112,24 +113,40 @@ window.controls = controls;
 
 const uniformsToExclude = { 'sculptureCenter': 0, 'msdf': 0, 'opacity': 0, 'time': 0, 'stepSize': 0, '_scale' : 1, 'resolution': 0};;
 
-let onCodeChange = (code) => {
+let getAllCode = () => {
+  let output = {}
+  for (const [key, value] of Object.entries(editors)) {    
+    output[key] = value.state.doc.toString()
+  }
+  return output;
+}
+
+let onCodeChange = (code, editorID) => {
   state.code = code;
   try {
-    // let newMesh = createSculpture(code, () => ( {
-    //   time: params.time,
-    // } ));
-    // scene.remove(mesh);
-    // scene.add(newMesh);
-    // mesh = newMesh;
-
-    mesh.material = sculptToThreeJSMaterial(code);
-    let uniforms = mesh.material.uniformDescriptions;
-    uniforms = uniforms.filter(uniform => !(uniform.name in uniformsToExclude))
+    console.log(editorID, editors)
+    let allCode = getAllCode();
+    let newMesh = createMultiPassSculptureWithGeometry(geometry, {bufferA:allCode.bufferA, finalImage: allCode.finalImage}, () => ( {
+      time: params.time,
+      _scale: scale
+    } ));
+    scene.remove(mesh);
     
-    console.log(uniforms);
-  } catch (error) {
-    console.error(error);
+    scene.add(newMesh);
+    mesh = newMesh;
+
+  } catch(e) {
+    console.error(e);
   }
+
+  //   mesh.material = sculptToThreeJSMaterial(code);
+  //   let uniforms = mesh.material.uniformDescriptions;
+  //   uniforms = uniforms.filter(uniform => !(uniform.name in uniformsToExclude))
+    
+  //   console.log(uniforms);
+  // } catch (error) {
+  //   console.error(error);
+  // }
 }
 
 /////Editor
@@ -137,21 +154,31 @@ let onCodeChange = (code) => {
 // let codeContainer = document.querySelector('.final-image');
 // codeContainer.appendChild(editor.dom);
 
-let editors = {
+let editorsCodeRef = {
   '.common' : '',
   '.buffera' : defaultPassCode(),
   '.bufferb' : defaultPassCode(),
   '.bufferc' : defaultPassCode(),
   '.bufferd' : defaultPassCode(),
-  '.final-image': spCode(),
+  '.final-image' : spCode(),
 }
-
-for (const [key, value] of Object.entries(editors)) {
+let lookup = {
+  '.common' : 'common',
+  '.buffera' : 'bufferA',
+  '.bufferb' : 'bufferB',
+  '.bufferc' : 'bufferC',
+  '.bufferd' : 'bufferD',
+  '.final-image' : 'finalImage'
+};
+let editors = {}
+for (const [key, value] of Object.entries(editorsCodeRef)) {
   
   let container = document.querySelector(key);
-  console.log(key, value, container);
-  let editor = createEditor(value, onCodeChange);
+  let editor = createEditor(value, (code) => {
+    onCodeChange(code, lookup[key]);
+  });
   container.appendChild(editor.dom);
+  editors[lookup[key]] = editor;
 }
 
 let onWindowResize = () => {
