@@ -1416,6 +1416,11 @@
     "@parcel/utils" "^1.11.0"
     physical-cpu-count "^2.0.0"
 
+"@shaderfrog/glsl-parser@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@shaderfrog/glsl-parser/-/glsl-parser-0.2.1.tgz#3963416c64916985fa1f3374975de5cc94986b91"
+  integrity sha512-rqbvfbDnDM+KP06DPZfbriBnSu6YDnBrrVNAOaIxZA3qWGyKsVoS/Xv5VkXD48kZ//q0YZhKAb10pVT4+mdTqg==
+
 "@types/q@^1.5.1":
   version "1.5.4"
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.4.tgz#15925414e0ad2cd765bfef58842f7e26a7accb24"
@@ -5242,13 +5247,15 @@ sha.js@^2.4.0, sha.js@^2.4.8:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-shader-park-core@^0.0.270:
-  version "0.0.270"
-  resolved "https://registry.yarnpkg.com/shader-park-core/-/shader-park-core-0.0.270.tgz#884b25d049f734c992a59ac0c13c4fdd836c8321"
-  integrity sha512-zQ1NKctic3WG21b8gqGa1Vo+oxsbHh18D+uTMLftdMkVAweMmg4d5eZDxJfgQDCzBk5hwBLgrR8mY1i8Az/Llw==
+shader-park-core@^0.1.12:
+  version "0.1.12"
+  resolved "https://registry.yarnpkg.com/shader-park-core/-/shader-park-core-0.1.12.tgz#73fe5b99947cad3b425054cf4bb5c01288b5d7bd"
+  integrity sha512-K3f/nY60F45QthnFX51dShpTSttwveK3L4y3FCwh5QD0/ohL+NeWx1ocZxI+6pXgkmE0eoo3CmL15J0K1S+KQA==
   dependencies:
+    "@shaderfrog/glsl-parser" "^0.2.1"
     escodegen "^1.11.1"
     esprima "^4.0.1"
+    three "^0.138.3"
 
 shallow-copy@~0.0.1:
   version "0.0.1"
