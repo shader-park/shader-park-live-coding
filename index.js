@@ -5,6 +5,7 @@ import { spCode, defaultPassCode } from './src/spCode.js';
 import { initUIInteractions } from './src/ui.js';
 import {createEditor} from './src/editor.js';
 import {Pane} from 'tweakpane';
+import { Vector2 } from 'three';
 
 
 let tabs = document.querySelectorAll('.tablinks');
@@ -72,10 +73,12 @@ if('scale' in qParams) {
 
 state.code = startCode;
 // Shader Park Setup
-
+let res = new Vector2();
+renderer.getSize(res);
 let mesh = createMultiPassSculptureWithGeometry(geometry, {finalImage: startCode, bufferA: defaultPassCode()}, () => ( {
     time: params.time,
-    _scale: scale
+    _scale: scale,
+    resolution: res
 } ));
 
 
@@ -123,12 +126,15 @@ let getAllCode = () => {
 
 let onCodeChange = (code, editorID) => {
   state.code = code;
+  
   try {
-    console.log(editorID, editors)
+    // console.log(editorID, editors)
     let allCode = getAllCode();
+    renderer.getSize(res);
     let newMesh = createMultiPassSculptureWithGeometry(geometry, {bufferA:allCode.bufferA, finalImage: allCode.finalImage}, () => ( {
       time: params.time,
-      _scale: scale
+      _scale: scale,
+      resolution: res
     } ));
     scene.remove(mesh);
     
