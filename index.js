@@ -104,7 +104,7 @@ if( 'text' in qParams) {
       bevelSize: .1,
       bevelOffset: 0,
       bevelSegments: 1
-    } );
+    });
     mesh.geometry.computeBoundingSphere();
     mesh.geometry.center();
   });
