@@ -21,7 +21,7 @@
     "@codemirror/lang-javascript": "^0.19.2",
     "@codemirror/next": "^0.16.0",
     "parcel-plugin-inline-source": "^1.0.0",
-    "shader-park-core": "^0.1.12",
+    "shader-park-core": "https://github.com/shader-park/shader-park-core.git#multi-pass",
     "three": "^0.138.3",
     "tweakpane": "^3.0.5"
   },
