@@ -3,6 +3,17 @@
 
 // To pass external data use the 'input' function. See other examples.
 
+export function spCode2() {
+  return`let res = getResolution()
+enable2D()
+let ratio = res.y/res.x
+let s = getSpace()
+let v = vec2(s.x*ratio, s.y)+0.5
+let col = sampleBufferA(getPixelCoord()/res * .5)
+color(col)`
+}
+
+
 export function spCode()  {
   return `let res = getResolution()
 rotateY(time)
@@ -10,11 +21,10 @@ let ratio = res.y/res.x
 let s = getSpace()
 let v = vec2(s.x*ratio, s.y)+0.5
 let col = sampleBufferA(v)
-col.x = pow(col.x, 6)
-col.y = pow(col.y, 6)
-col.z = pow(col.z, 6)
+// col.x = pow(col.x, 6)
+// col.y = pow(col.y, 6)
+// col.z = pow(col.z, 6)
 color(col);
-
 box(vec3(.5));`
 };
 
@@ -46,7 +56,7 @@ export function blurPassCode() {
   color(mix(cb, init, pow(nsin(time), 14)));`;
 }
 
-export function defaultPassCode() {
+export function defaultPassCode2() {
   return `let res = getResolution()
   let ratio = res.y/res.x
   //rotateY(time)
@@ -63,6 +73,38 @@ export function defaultPassCode() {
   sphere(1.2+n*.004);
 `
 };
+
+export function defaultPassCode() {
+  return `let res = getResolution() 
+let ratio = res.y/res.x;
+let s = enable2D();
+let uv = getPixelCoord()/(getResolution())
+uv = uv*0.5
+let col = sampleBufferA(uv); 
+col = vec3(col.x, col.y, col.z) 
+let w = (uv-0.5)*0.5
+w.y *= ratio
+let cen = distance(vec3(0.1*sin(5*time), 0.1*cos(3*time), 0.0), vec3(w.x,w.y, 0)) ;
+let ds = smoothstep(0.001, 0.0009, cen) 
+col = (col + 0.9*vec3(ds, ds, ds))*0.98  
+color(col);`
+}
+
+export function defaultPassCode3() {
+  return `let res = getResolution() 
+  noLighting() 
+  let ratio = res.y/res.x; //rotateY(time) 
+  let s = enable2D();//getSpace() let n = noise(s*10+time)*.5+.5; //s*= nsin(time)+.4+n*.1; 
+  let v = vec2(s.x*ratio, s.y)*0.5+0.5 
+  let col = sampleLastFrame((s+vec2(1.0,0.5))*vec2(0.25,0.5)); 
+  col = vec3(col.x, col.y, col.z) 
+  let cen = distance(vec3(1+0.4*sin(time), 0.5+0.4*cos(time), 0.0), vec3(s.x,s.y, 0)) 
+  let ds = smoothstep(0.19, 0.2, cen) 
+  col = mix(vec3(ds, ds, ds), col, tryMakeNum(0.5)); 
+  color(col); //  metal(n) //  shine(n); sphere(6.2);  
+  `;
+}
+
 
 // export function defaultPassCode() {
 //   return `enable2D();

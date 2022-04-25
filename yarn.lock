@@ -5247,10 +5247,9 @@ sha.js@^2.4.0, sha.js@^2.4.8:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-shader-park-core@^0.1.12:
-  version "0.1.12"
-  resolved "https://registry.yarnpkg.com/shader-park-core/-/shader-park-core-0.1.12.tgz#73fe5b99947cad3b425054cf4bb5c01288b5d7bd"
-  integrity sha512-K3f/nY60F45QthnFX51dShpTSttwveK3L4y3FCwh5QD0/ohL+NeWx1ocZxI+6pXgkmE0eoo3CmL15J0K1S+KQA==
+"shader-park-core@https://github.com/shader-park/shader-park-core.git#multi-pass":
+  version "0.1.11"
+  resolved "https://github.com/shader-park/shader-park-core.git#de6b5b6415a6f1518b36f9ce852df36374540f82"
   dependencies:
     "@shaderfrog/glsl-parser" "^0.2.1"
     escodegen "^1.11.1"

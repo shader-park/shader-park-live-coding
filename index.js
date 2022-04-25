@@ -75,11 +75,17 @@ state.code = startCode;
 // Shader Park Setup
 let res = new Vector2();
 renderer.getSize(res);
-let mesh = createMultiPassSculptureWithGeometry(geometry, {finalImage: startCode, bufferA: defaultPassCode()}, () => ( {
-    time: params.time,
-    _scale: scale,
-    resolution: res
-} ));
+let filler = `let s = enable2D()`;
+
+function initMultiPass(finalImage, bufferA, bufferB, bufferC, bufferD) {
+  return createMultiPassSculptureWithGeometry(geometry, { finalImage, bufferA, bufferB, bufferC, bufferD }, () => ( {
+      time: params.time,
+      _scale: scale,
+      resolution: res
+  } ));
+}
+let mesh = initMultiPass(startCode, defaultPassCode(), filler, filler, filler);
+
 
 
 scene.add(mesh);
@@ -131,11 +137,12 @@ let onCodeChange = (code, editorID) => {
     // console.log(editorID, editors)
     let allCode = getAllCode();
     renderer.getSize(res);
-    let newMesh = createMultiPassSculptureWithGeometry(geometry, {bufferA:allCode.bufferA, finalImage: allCode.finalImage}, () => ( {
-      time: params.time,
-      _scale: scale,
-      resolution: res
-    } ));
+    let newMesh = initMultiPass(allCode.finalImage, allCode.bufferA, allCode.bufferB, allCode.bufferC, allCode.bufferD);
+    // let newMesh = createMultiPassSculptureWithGeometry(geometry, {bufferA:allCode.bufferA, finalImage: allCode.finalImage}, () => ( {
+    //   time: params.time,
+    //   _scale: scale,
+    //   resolution: res
+    // } ));
     scene.remove(mesh);
     
     scene.add(newMesh);
@@ -163,9 +170,9 @@ let onCodeChange = (code, editorID) => {
 let editorsCodeRef = {
   '.common' : '',
   '.buffera' : defaultPassCode(),
-  '.bufferb' : defaultPassCode(),
-  '.bufferc' : defaultPassCode(),
-  '.bufferd' : defaultPassCode(),
+  '.bufferb' : filler,
+  '.bufferc' : filler,
+  '.bufferd' : filler,
   '.final-image' : spCode(),
 }
 let lookup = {
