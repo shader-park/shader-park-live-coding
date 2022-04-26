@@ -2,14 +2,13 @@
   "name": "shader-park-live-coding",
   "version": "1.0.0",
   "description": "Starter template with Shader Park for live coding",
-  "main": "index.js",
   "repository": "https://github.com/shader-park/shader-park-live-coding",
   "author": "Torin Blankensmith & Peter Whidden",
   "license": "MIT",
   "private": false,
   "scripts": {
     "start": "parcel index.html --open",
-    "build": "parcel build --no-source-maps index.html"
+    "build": "parcel build index.html"
   },
   "staticFiles": {
     "staticPath": "fonts",
@@ -27,7 +26,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",
-    "parcel-bundler": "^1.12.5",
+    "parcel": "^2.5.0",
     "parcel-plugin-static-files-copy": "^2.6.0"
   }
 }
