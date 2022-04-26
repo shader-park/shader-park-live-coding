@@ -173,9 +173,9 @@ let onCodeChange = (code, editorID) => {
     let allCode = getAllCode();
     // console.log('allcode', allCode);
     // state = {...allCode};
-    Object.keys(startCode).forEach(pass => state[pass] = startCode[pass]); //update state
+    Object.keys(allCode).forEach(pass => state[pass] = allCode[pass]); //update state
     renderer.getSize(res);
-    let newMesh = initMultiPass(allCode.finalImage, allCode.bufferA, allCode.bufferB, allCode.bufferC, allCode.bufferD);
+    let newMesh = initMultiPass(allCode.finalImage, allCode.bufferA, allCode.bufferB, allCode.bufferC, allCode.bufferD, allCode.common);
     // let newMesh = createMultiPassSculptureWithGeometry(geometry, {bufferA:allCode.bufferA, finalImage: allCode.finalImage}, () => ( {
     //   time: params.time,
     //   _scale: scale,
