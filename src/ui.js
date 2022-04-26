@@ -17,7 +17,12 @@ const createPermaLink = (state) => {
     
     button.addEventListener('click', () => {
         let urlSearchParams = new URLSearchParams(window.location.search);
-        urlSearchParams.set('code', encodeURI(state.code));
+        urlSearchParams.set('bufferA', encodeURI(state.bufferA));
+        urlSearchParams.set('bufferB', encodeURI(state.bufferB));
+        urlSearchParams.set('bufferC', encodeURI(state.bufferC));
+        urlSearchParams.set('bufferD', encodeURI(state.bufferD));
+        urlSearchParams.set('common', encodeURI(state.common));
+        urlSearchParams.set('finalImage', encodeURI(state.finalImage));
         window.location.search = urlSearchParams.toString();
     }, false);
 }
@@ -52,6 +57,6 @@ const showHideButtonInteraction = () => {
 }
 
 export const initUIInteractions = (state) => {
-    showHideButtonInteraction();
+    // showHideButtonInteraction();
     createPermaLink(state);
 }

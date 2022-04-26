@@ -43,9 +43,18 @@ let state = {};
 
 // const pane = new Pane();
 
-// initUIInteractions(state);
+initUIInteractions(state);
 
-let startCode = spCode();
+// let startCode = spCode();
+let filler = `let s = enable2D()`;
+let startCode = {
+  "finalImage": spCode(),
+  "bufferA" : defaultPassCode(),
+  "bufferB" : filler,
+  "bufferC" : filler,
+  "bufferD" : filler,
+  "common": ' ',
+}
 
 let scene = new Scene();
 let params = { time: 0, test: {'x':.2, 'y': .4}};
@@ -74,28 +83,41 @@ if ('torus' in qParams) {
   geometry.center();
 }
 
-if ('code' in qParams) {
-  startCode = decodeURI(qParams['code'])
-}
+Object.keys(startCode).forEach(pass => {
+  if (pass in qParams) {
+    startCode[pass] = decodeURI(qParams[pass]);
+  }
+  state[pass] = startCode[pass];
+});
+
+
+// if ('finalImage' in qParams) {
+//   // startCode = decodeURI(qParams['code'])
+//   startCode.finalImage  = decodeURI(qParams['finalImage']);
+//   startCode.bufferA  = decodeURI(qParams['bufferA']);
+//   startCode.bufferB  = decodeURI(qParams['bufferB']);
+//   startCode.bufferC  = decodeURI(qParams['bufferC']);
+//   startCode.bufferD  = decodeURI(qParams['bufferD']);
+//   startCode.common  = decodeURI(qParams['common']);
+// }
 let scale = 1.0;
 if('scale' in qParams) {
   scale = qParams['scale'];
 }
 
-state.code = startCode;
 // Shader Park Setup
 let res = new Vector2();
 renderer.getSize(res);
-let filler = `let s = enable2D()`;
 
-function initMultiPass(finalImage, bufferA, bufferB, bufferC, bufferD) {
-  return createMultiPassSculptureWithGeometry(geometry, { finalImage, bufferA, bufferB, bufferC, bufferD }, () => ( {
+
+function initMultiPass(finalImage, bufferA, bufferB, bufferC, bufferD, common) {
+  return createMultiPassSculptureWithGeometry(geometry, { finalImage, bufferA, bufferB, bufferC, bufferD, common }, () => ( {
       time: params.time,
       _scale: scale,
       resolution: res
   } ));
 }
-let mesh = initMultiPass(startCode, defaultPassCode(), filler, filler, filler);
+let mesh = initMultiPass(startCode.finalImage, startCode.bufferA, startCode.bufferB, startCode.bufferC, startCode.bufferD, startCode.common);
 
 
 
@@ -141,12 +163,17 @@ let getAllCode = () => {
   return output;
 }
 
+
+
 let onCodeChange = (code, editorID) => {
-  state.code = code;
+  
   
   try {
     // console.log(editorID, editors)
     let allCode = getAllCode();
+    // console.log('allcode', allCode);
+    // state = {...allCode};
+    Object.keys(startCode).forEach(pass => state[pass] = startCode[pass]); //update state
     renderer.getSize(res);
     let newMesh = initMultiPass(allCode.finalImage, allCode.bufferA, allCode.bufferB, allCode.bufferC, allCode.bufferD);
     // let newMesh = createMultiPassSculptureWithGeometry(geometry, {bufferA:allCode.bufferA, finalImage: allCode.finalImage}, () => ( {
@@ -179,12 +206,12 @@ let onCodeChange = (code, editorID) => {
 // codeContainer.appendChild(editor.dom);
 
 let editorsCodeRef = {
-  '.common' : '',
-  '.buffera' : defaultPassCode(),
-  '.bufferb' : filler,
-  '.bufferc' : filler,
-  '.bufferd' : filler,
-  '.final-image' : spCode(),
+  '.common' : startCode.common,
+  '.buffera' : startCode.bufferA,
+  '.bufferb' : startCode.bufferB,
+  '.bufferc' : startCode.bufferC,
+  '.bufferd' : startCode.bufferD,
+  '.final-image' : startCode.finalImage,
 }
 let lookup = {
   '.common' : 'common',
@@ -204,6 +231,10 @@ for (const [key, value] of Object.entries(editorsCodeRef)) {
   container.appendChild(editor.dom);
   editors[lookup[key]] = editor;
 }
+
+// let code = getAllCode();
+// state = {...code};
+// console.log('state', state)
 
 let onWindowResize = () => {
   camera.aspect = window.innerWidth / window.innerHeight;
