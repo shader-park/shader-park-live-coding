@@ -1,4 +1,4 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Color, TorusKnotGeometry, SphereGeometry, FontLoader, TextBufferGeometry } from 'three';
+import { Scene, PerspectiveCamera, WebGLRenderer, Color, TorusKnotGeometry, SphereGeometry } from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { createSculptureWithGeometry, sculptToThreeJSMaterial, createMultiPassSculptureWithGeometry } from 'shader-park-core';
 import { spCode, defaultPassCode } from './src/spCode.js';
@@ -15,11 +15,22 @@ let getContainerClass = (tab) => '.'+tab.innerHTML.toLocaleLowerCase().replace('
 
 tabs.forEach(tab => {
   tab.addEventListener('click', () => {
+    if(activeTab == tab) {
+      if(activeTab.classList.contains('active')) {
+        activeTab.classList.remove('active');
+        activeContainer.classList.add('hidden');
+      } else {
+        activeTab.classList.add('active');
+        activeContainer.classList.remove('hidden');
+      }
+      return;
+    }
     activeTab.classList.remove('active');
     tab.classList.add('active');
     activeTab = tab;
     activeContainer.classList.add('hidden');
     activeContainer = document.querySelector(getContainerClass(tab))
+    
     activeContainer.classList.remove('hidden');
   }, false);
 });
@@ -32,7 +43,7 @@ let state = {};
 
 // const pane = new Pane();
 
-initUIInteractions(state);
+// initUIInteractions(state);
 
 let startCode = spCode();
 
@@ -90,25 +101,25 @@ let mesh = initMultiPass(startCode, defaultPassCode(), filler, filler, filler);
 
 scene.add(mesh);
 
-if( 'text' in qParams) {
-  const loader = new FontLoader();
+// if( 'text' in qParams) {
+//   const loader = new FontLoader();
 
-  loader.load( './helvetiker_regular1.typeface.json', function ( font ) {
-    mesh.geometry = new TextBufferGeometry( qParams['text'], {
-      font: font,
-      size: 2,
-      height: .1,
-      curveSegments: 12,
-      bevelEnabled: true,
-      bevelThickness: .01,
-      bevelSize: .1,
-      bevelOffset: 0,
-      bevelSegments: 1
-    });
-    mesh.geometry.computeBoundingSphere();
-    mesh.geometry.center();
-  });
-}
+//   loader.load( './helvetiker_regular1.typeface.json', function ( font ) {
+//     mesh.geometry = new TextBufferGeometry( qParams['text'], {
+//       font: font,
+//       size: 2,
+//       height: .1,
+//       curveSegments: 12,
+//       bevelEnabled: true,
+//       bevelThickness: .01,
+//       bevelSize: .1,
+//       bevelOffset: 0,
+//       bevelSegments: 1
+//     });
+//     mesh.geometry.computeBoundingSphere();
+//     mesh.geometry.center();
+//   });
+// }
 
 let controls = new OrbitControls( camera, renderer.domElement, {
   enableDamping : true,
