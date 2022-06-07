@@ -67,16 +67,19 @@ torusGeometry.center();
 const geometry = ('torus' in qParams) ? torusGeometry : sphereGeometry;
 
 // Shader Park Setup
-const params = { time: 0, test: { 'x':.2, 'y': .4 } };
-const scale = ('scale' in qParams) ? qParams['scale'] : 1.0;
+const params =  {};
+
+params.time = 0;
+params.test = { 'x':.2, 'y': .4 };
+params.scale = ('scale' in qParams) ? qParams['scale'] : 1.0;
 
 const mesh = createSculptureWithGeometry(geometry, state.code, () => ( {
     time: params.time,
-    _scale: scale
+    _scale: params.scale
 } ));
-state.mesh = mesh;
 
-scene.add(state.mesh);
+state.mesh = mesh;
+scene.add(mesh);
 
 // const pane = new Pane();
 // pane.addInput(
