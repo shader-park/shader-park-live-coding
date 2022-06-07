@@ -1,4 +1,4 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Color, TorusKnotGeometry, SphereGeometry, FontLoader, TextBufferGeometry } from 'three';
+import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { createSculptureWithGeometry, sculptToThreeJSMaterial } from 'shader-park-core';
 import { spCode } from './src/spCode.js';
@@ -7,65 +7,89 @@ import { createEditor } from './src/editor.js';
 import { Pane } from 'tweakpane';
 
 // import { font } from './src/helvetiker_regular1.typeface.json';
+// const fonts = JSON.parse(font);
 
-// let fonts = JSON.parse(font)
-let state = {};
+// query parameters
+const urlSearchParams = new URLSearchParams(window.location.search);
+const qParams = Object.fromEntries(urlSearchParams.entries());
 
-// const pane = new Pane();
-
+// starter code and its UI init
+const startCode = ('code' in qParams) ? decodeURI(qParams['code']) : spCode();
+const state = { code: startCode };
 initUIInteractions(state);
 
-let startCode = spCode();
+// Sizes
+const sizes = {
+  width: window.innerWidth,
+  height: window.innerHeight
+}
 
-let scene = new Scene();
-let params = { time: 0, test: {'x':.2, 'y': .4}};
+window.addEventListener('resize', () =>
+{
+  sizes.width = window.innerWidth;
+  sizes.height = window.innerHeight;
+
+  camera.aspect = sizes.width / sizes.height;
+  camera.updateProjectionMatrix();
+  renderer.setSize(sizes.width, sizes.height);
+})
+
+// Scene
+const scene = new THREE.Scene();
+
+// Camera
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 1000);
+camera.position.z = 2;
+
+// Renderer
+const renderer = new THREE.WebGLRenderer({ antialias: true, transparent: true });
+renderer.setSize(sizes.width, sizes.height);
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setClearColor(new THREE.Color(1, 1, 1), 0);
+document.body.appendChild(renderer.domElement);
+
+// Controls
+const controlConfig = {
+  enableDamping : true,
+  dampingFactor : 0.25,
+  zoomSpeed : 0.5,
+  rotateSpeed : 0.5
+};
+
+const controls = new OrbitControls(camera, renderer.domElement, controlConfig);
+
+// Geometry
+const sphereGeometry = new THREE.SphereGeometry(2, 45, 45);
+const torusGeometry = new THREE.TorusKnotGeometry(2, .3, 100, 40);
+torusGeometry.computeBoundingSphere();
+torusGeometry.center();
+
+const geometry = ('torus' in qParams) ? torusGeometry : sphereGeometry;
+
+// Shader Park Setup
+const params = { time: 0, test: { 'x':.2, 'y': .4 } };
+const scale = ('scale' in qParams) ? qParams['scale'] : 1.0;
+
+const mesh = createSculptureWithGeometry(geometry, state.code, () => ( {
+    time: params.time,
+    _scale: scale
+} ));
+state.mesh = mesh;
+
+scene.add(state.mesh);
+
+// const pane = new Pane();
 // pane.addInput(
 //   params, 'test',
 //   {min: 0, max: 2 }
 // );
 
-let camera = new PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-camera.position.z = 4;
-
-let renderer = new WebGLRenderer({ antialias: true, transparent: true });
-renderer.setSize( window.innerWidth, window.innerHeight );
-renderer.setPixelRatio( window.devicePixelRatio );
-
-renderer.setClearColor( new Color(1, 1, 1), 0 );
-document.body.appendChild( renderer.domElement );
-
-let geometry  = new SphereGeometry(2, 45, 45);
-const urlSearchParams = new URLSearchParams(window.location.search);
-const qParams = Object.fromEntries(urlSearchParams.entries());
-if ('torus' in qParams) {
-  geometry = new TorusKnotGeometry( 2, .3, 100, 40);
-  geometry.computeBoundingSphere();
-  geometry.center();
-}
-
-if ('code' in qParams) {
-  startCode = decodeURI(qParams['code'])
-}
-let scale = 1.0;
-if('scale' in qParams) {
-  scale = qParams['scale'];
-}
-
-state.code = startCode;
-// Shader Park Setup
-let mesh = createSculptureWithGeometry(geometry, startCode, () => ( {
-    time: params.time,
-    _scale: scale
-} ));
-
-
-scene.add(mesh);
-
-if( 'text' in qParams) {
+if('text' in qParams) {
   const loader = new FontLoader();
+  const mesh = state.mesh;
 
   loader.load( './helvetiker_regular1.typeface.json', function ( font ) {
-    mesh.geometry = new TextBufferGeometry( qParams['text'], {
+    mesh.geometry = new THREE.TextBufferGeometry( qParams['text'], {
       font: font,
       size: 2,
       height: .1,
@@ -81,31 +105,22 @@ if( 'text' in qParams) {
   });
 }
 
-let controls = new OrbitControls( camera, renderer.domElement, {
-  enableDamping : true,
-  dampingFactor : 0.25,
-  zoomSpeed : 0.5,
-  rotateSpeed : 0.5
-} );
-camera.position.z = 2;
+const uniformsToExclude = { 'sculptureCenter': 0, 'msdf': 0, 'opacity': 0, 'time': 0, 'stepSize': 0, '_scale' : 1, 'resolution': 0};
 
-window.controls = controls;
-
-const uniformsToExclude = { 'sculptureCenter': 0, 'msdf': 0, 'opacity': 0, 'time': 0, 'stepSize': 0, '_scale' : 1, 'resolution': 0};;
-
-let onCodeChange = (code) => {
+const onCodeChange = (code) => {
   state.code = code;
   try {
-    // let newMesh = createSculpture(code, () => ( {
+    // const newMesh = createSculpture(code, () => ( {
     //   time: params.time,
     // } ));
-    // scene.remove(mesh);
+    // scene.remove(state.mesh);
     // scene.add(newMesh);
-    // mesh = newMesh;
+    // state.mesh = newMesh;
 
+    const mesh = state.mesh;
     mesh.material = sculptToThreeJSMaterial(code);
     let uniforms = mesh.material.uniformDescriptions;
-    uniforms = uniforms.filter(uniform => !(uniform.name in uniformsToExclude))
+    uniforms = uniforms.filter(uniform => !(uniform.name in uniformsToExclude));
     
     console.log(uniforms);
   } catch (error) {
@@ -113,25 +128,22 @@ let onCodeChange = (code) => {
   }
 }
 
-/////Editor
-let editor = createEditor(startCode, onCodeChange);
-window.editor = editor;
-let codeContainer = document.querySelector('.code-container');
+// Editor
+const editor = createEditor(state.code, onCodeChange);
+const codeContainer = document.querySelector('.code-container');
 codeContainer.appendChild(editor.dom);
 
-let onWindowResize = () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize( window.innerWidth, window.innerHeight );
-}
+// Add parameters to window
+window.applications = {}
+window.applications.controls = controls;
+window.applications.editor = editor;
 
-window.addEventListener( 'resize', onWindowResize );
-
-let render = () => {
-  requestAnimationFrame( render );
+// render for each frame
+const render = () => {
+  requestAnimationFrame(render);
   params.time += 0.01;
   controls.update();
-  renderer.render( scene, camera );
+  renderer.render(scene, camera);
 };
 
 render();
