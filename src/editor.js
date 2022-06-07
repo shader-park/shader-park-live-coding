@@ -1,40 +1,40 @@
-import {EditorState, basicSetup} from "@codemirror/basic-setup"
-import {EditorView, keymap} from "@codemirror/view"
-import {indentWithTab} from "@codemirror/commands"
-import {javascript} from "@codemirror/lang-javascript"
+import { EditorState, basicSetup } from '@codemirror/basic-setup'
+import { EditorView, keymap } from '@codemirror/view'
+import { indentWithTab } from '@codemirror/commands'
+import { javascript } from '@codemirror/lang-javascript'
 
 export function createEditor(startCode, codeChangeCallback) {
     let baseTheme = EditorView.theme({
-        "&": {
+        '&': {
           fontSize: '20pt',
-          color: "white",
-          backgroundColor: "transparent",
+          color: 'white',
+          backgroundColor: 'transparent',
           height: '80vh',
         },
-        ".cm-editor, .cm-editor:focused": {
-          outline: "0 !important"
+        '.cm-editor, .cm-editor:focused': {
+          outline: '0 !important'
         },
-        ".cm-content ": {
-          caretColor: "#0e9"
+        '.cm-content ': {
+          caretColor: '#0e9'
         },
-        ".cm-scroller": {
-            overflow: "scroll",
-            border: "none",
+        '.cm-scroller': {
+            overflow: 'scroll',
+            border: 'none',
         },
-        "&.cm-focused ": {
+        '&.cm-focused ': {
           outline: 0
         },
-        "&.cm-focused .cm-cursor": {
-          borderLeftColor: "#0e9"
+        '&.cm-focused .cm-cursor': {
+          borderLeftColor: '#0e9'
         },
-        "&.cm-focused .cm-selectionBackground, ::selection": {
-          backgroundColor: "#074",
+        '&.cm-focused .cm-selectionBackground, ::selection': {
+          backgroundColor: '#074',
         },
-        ".cm-gutters": {
-          backgroundColor: "transparent",
-          color: "#ddd",
-          border: "none",
-          outline: "none"
+        '.cm-gutters': {
+          backgroundColor: 'transparent',
+          color: '#ddd',
+          border: 'none',
+          outline: 'none'
         }
       }, {dark: true});
 

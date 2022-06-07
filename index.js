@@ -1,13 +1,12 @@
 import { Scene, PerspectiveCamera, WebGLRenderer, Color, TorusKnotGeometry, SphereGeometry, FontLoader, TextBufferGeometry } from 'three';
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { createSculptureWithGeometry, sculptToThreeJSMaterial } from 'shader-park-core';
 import { spCode } from './src/spCode.js';
 import { initUIInteractions } from './src/ui.js';
-import {createEditor} from './src/editor.js';
-import {Pane} from 'tweakpane';
+import { createEditor } from './src/editor.js';
+import { Pane } from 'tweakpane';
 
-
-// import {font} from './src/helvetiker_regular1.typeface.json';
+// import { font } from './src/helvetiker_regular1.typeface.json';
 
 // let fonts = JSON.parse(font)
 let state = {};
