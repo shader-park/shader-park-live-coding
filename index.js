@@ -1,12 +1,12 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Color, SphereGeometry, TorusKnotGeometry, TextBufferGeometry } from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { createSculptureWithGeometry, sculptToThreeJSMaterial } from 'shader-park-core';
-import { spCode } from './src/spCode.js';
-import { initUIInteractions } from './src/ui.js';
-import { createEditor } from './src/editor.js';
-import { Pane } from 'tweakpane';
+import { Scene, PerspectiveCamera, WebGLRenderer, Color, SphereGeometry, TorusKnotGeometry, TextBufferGeometry } from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { createSculptureWithGeometry, sculptToThreeJSMaterial } from "shader-park-core";
+import { spCode } from "./src/spCode.js";
+import { initUIInteractions } from "./src/ui.js";
+import { createEditor } from "./src/editor.js";
+import { Pane } from "tweakpane";
 
-// import { font } from './src/helvetiker_regular1.typeface.json';
+// import { font } from "./src/helvetiker_regular1.typeface.json";
 // const fonts = JSON.parse(font);
 
 // query parameters
@@ -14,7 +14,7 @@ const urlSearchParams = new URLSearchParams(window.location.search);
 const qParams = Object.fromEntries(urlSearchParams.entries());
 
 // starter code and its UI init
-const startCode = ('code' in qParams) ? decodeURI(qParams['code']) : spCode();
+const startCode = ("code" in qParams) ? decodeURI(qParams["code"]) : spCode();
 const state = { code: startCode };
 initUIInteractions(state);
 
@@ -24,7 +24,7 @@ const sizes = {
   height: window.innerHeight
 }
 
-window.addEventListener('resize', () =>
+window.addEventListener("resize", () =>
 {
   sizes.width = window.innerWidth;
   sizes.height = window.innerHeight;
@@ -64,14 +64,14 @@ const torusGeometry = new TorusKnotGeometry(2, .3, 100, 40);
 torusGeometry.computeBoundingSphere();
 torusGeometry.center();
 
-const geometry = ('torus' in qParams) ? torusGeometry : sphereGeometry;
+const geometry = ("torus" in qParams) ? torusGeometry : sphereGeometry;
 
 // Shader Park Setup
 const params =  {};
 
 params.time = 0;
-params.test = { 'x':.2, 'y': .4 };
-params.scale = ('scale' in qParams) ? qParams['scale'] : 1.0;
+params.test = { "x":.2, "y": .4 };
+params.scale = ("scale" in qParams) ? qParams["scale"] : 1.0;
 
 const mesh = createSculptureWithGeometry(geometry, state.code, () => ( {
     time: params.time,
@@ -83,16 +83,16 @@ scene.add(mesh);
 
 // const pane = new Pane();
 // pane.addInput(
-//   params, 'test',
+//   params, "test",
 //   {min: 0, max: 2 }
 // );
 
-if('text' in qParams) {
+if("text" in qParams) {
   const loader = new FontLoader();
   const mesh = state.mesh;
 
-  loader.load( './helvetiker_regular1.typeface.json', function ( font ) {
-    mesh.geometry = new TextBufferGeometry( qParams['text'], {
+  loader.load( "./helvetiker_regular1.typeface.json", function ( font ) {
+    mesh.geometry = new TextBufferGeometry( qParams["text"], {
       font: font,
       size: 2,
       height: .1,
@@ -108,7 +108,7 @@ if('text' in qParams) {
   });
 }
 
-const uniformsToExclude = { 'sculptureCenter': 0, 'msdf': 0, 'opacity': 0, 'time': 0, 'stepSize': 0, '_scale' : 1, 'resolution': 0};
+const uniformsToExclude = { "sculptureCenter": 0, "msdf": 0, "opacity": 0, "time": 0, "stepSize": 0, "_scale" : 1, "resolution": 0};
 
 const onCodeChange = (code) => {
   state.code = code;
@@ -133,7 +133,7 @@ const onCodeChange = (code) => {
 
 // Editor
 const editor = createEditor(state.code, onCodeChange);
-const codeContainer = document.querySelector('.code-container');
+const codeContainer = document.querySelector(".code-container");
 codeContainer.appendChild(editor.dom);
 
 // Add parameters to window
