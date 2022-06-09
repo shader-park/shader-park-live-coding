@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import { Scene, PerspectiveCamera, WebGLRenderer, Color, SphereGeometry, TorusKnotGeometry, TextBufferGeometry } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { createSculptureWithGeometry, sculptToThreeJSMaterial } from 'shader-park-core';
 import { spCode } from './src/spCode.js';
@@ -35,17 +35,17 @@ window.addEventListener('resize', () =>
 })
 
 // Scene
-const scene = new THREE.Scene();
+const scene = new Scene();
 
 // Camera
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 1000);
+const camera = new PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 1000);
 camera.position.z = 2;
 
 // Renderer
-const renderer = new THREE.WebGLRenderer({ antialias: true, transparent: true });
+const renderer = new WebGLRenderer({ antialias: true, transparent: true });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setClearColor(new THREE.Color(1, 1, 1), 0);
+renderer.setClearColor(new Color(1, 1, 1), 0);
 document.body.appendChild(renderer.domElement);
 
 // Controls
@@ -59,8 +59,8 @@ const controlConfig = {
 const controls = new OrbitControls(camera, renderer.domElement, controlConfig);
 
 // Geometry
-const sphereGeometry = new THREE.SphereGeometry(2, 45, 45);
-const torusGeometry = new THREE.TorusKnotGeometry(2, .3, 100, 40);
+const sphereGeometry = new SphereGeometry(2, 45, 45);
+const torusGeometry = new TorusKnotGeometry(2, .3, 100, 40);
 torusGeometry.computeBoundingSphere();
 torusGeometry.center();
 
@@ -92,7 +92,7 @@ if('text' in qParams) {
   const mesh = state.mesh;
 
   loader.load( './helvetiker_regular1.typeface.json', function ( font ) {
-    mesh.geometry = new THREE.TextBufferGeometry( qParams['text'], {
+    mesh.geometry = new TextBufferGeometry( qParams['text'], {
       font: font,
       size: 2,
       height: .1,
