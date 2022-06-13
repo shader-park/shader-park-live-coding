@@ -1,5 +1,7 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Color, TorusKnotGeometry, SphereGeometry, FontLoader, TextBufferGeometry } from 'three';
+import { Scene, PerspectiveCamera, WebGLRenderer, Color, TorusKnotGeometry, SphereGeometry } from 'three';
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'
 import { createSculptureWithGeometry, sculptToThreeJSMaterial } from 'shader-park-core';
 import { spCode } from './src/spCode.js';
 import { initUIInteractions } from './src/ui.js';
@@ -103,7 +105,7 @@ if( 'text' in qParams) {
   const loader = new FontLoader();
     // './helvetiker_regular1.typeface.json'
     loader.load('https://cdn.glitch.com/44b034f5-6c9a-414c-96b3-8280ecf82f27%2Fhelvetiker_regular.typeface.json?v=1615399030749', function ( font ) {
-    mesh.geometry = new TextBufferGeometry( qParams['text'], {
+    mesh.geometry = new TextGeometry( qParams['text'], {
       font: font,
       size: 2,
       height: .1,
