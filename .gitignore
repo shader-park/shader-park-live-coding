@@ -1,6 +1,7 @@
 dist/
 dist.zip
 
+.parcel-cache/
 
 /screen_shots/cap2
 /captures
