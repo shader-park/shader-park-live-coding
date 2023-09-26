@@ -21,8 +21,8 @@
     "@codemirror/lang-javascript": "^0.20.1",
     "@codemirror/next": "^0.16.0",
     "parcel-plugin-inline-source": "^1.0.0",
-    "shader-park-core": "^0.1.26",
-    "three": "^0.141.0",
+    "shader-park-core": "^0.2.06",
+    "three": "^0.155.0",
     "tweakpane": "^3.0.8"
   },
   "devDependencies": {

@@ -78,3 +78,26 @@ canvas {
     border-color: white;
     /* box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.2); */
 }
+
+.cm-scroller {
+  overflow: auto !important;
+}
+.cm-scroller::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.5); /* Adjust as needed */
+  border: 3px solid transparent; /* This will increase the size of the thumb, effectively hiding the intersection */
+  background-clip: content-box; /* Ensures the background color doesn't bleed beyond the border */
+  border-radius: 5px; /* Optional: For rounded corners */
+}
+
+.cm-scroller::-webkit-scrollbar {
+  width: 10px; 
+  height: 10px;
+}
+
+.cm-scroller:focus {
+  outline: none !important
+}
+
+.cm-editor {
+  outline: none !important
+}
