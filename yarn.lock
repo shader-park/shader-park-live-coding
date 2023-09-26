@@ -5190,7 +5190,7 @@ sha.js@^2.4.0, sha.js@^2.4.8:
     inherits "^2.0.1"
     safe-buffer "^5.0.1"
 
-shader-park-core@^0.2.06:
+shader-park-core@^0.2.6:
   version "0.2.6"
   resolved "https://registry.yarnpkg.com/shader-park-core/-/shader-park-core-0.2.6.tgz#976c756cda1eb812d2255bad8a22cfd410b69097"
   integrity sha512-9XmSVq5tHM6VocjoQ4sqj61r1snProylvouSJC2/gat1DZaFU+GGB+v9+MV5jtCQNk8m6PMCCAGjO96fJw0fjQ==
