@@ -7,9 +7,10 @@
   "author": "Torin Blankensmith & Peter Whidden",
   "license": "MIT",
   "private": false,
+  "sideEffects": true,
   "scripts": {
     "start": "parcel index.html --open",
-    "build": "parcel build --no-source-maps index.html"
+    "build": "parcel build --no-source-maps index.html --no-minify"
   },
   "staticFiles": {
     "staticPath": "fonts",
