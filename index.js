@@ -1,6 +1,6 @@
 import { Scene, PerspectiveCamera, WebGLRenderer, Color, SphereGeometry, TorusKnotGeometry, TextBufferGeometry } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { createSculptureWithGeometry, sculptToThreeJSMaterial } from "shader-park-core";
+import { createSculptureWithGeometry, sculptToThreeJSMaterial } from "/node_modules/shader-park-core/dist/shader-park-core.esm.js";
 import { spCode } from "./src/spCode.js";
 import { initUIInteractions } from "./src/ui.js";
 import { createEditor } from "./src/editor.js";
